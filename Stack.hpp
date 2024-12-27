@@ -4,6 +4,7 @@
 #include <iostream>
 
 class Stack {
+	friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
 private:
 	int* Items;
 	int top_pos;
@@ -74,5 +75,17 @@ public:
 		return maximum_size;	
 	}
 };
+
+	std::ostream& operator<<(std::ostream& os, const Stack& stack)
+	{
+		os << "[ ";
+		if (!stack.stack_empty()) {
+			for (unsigned int i = 0; i <= stack.top_pos; ++i) {
+				os << stack.Items[i] << " ";
+			}
+		}
+			os << "]" << std::endl;
+		return os;
+	}
 
 #endif
