@@ -16,5 +16,19 @@ int main()
 	std::cout << e << "Dimensione: " << e.size() << std::endl;
 	std::cout << u << "Dimensione: " << u.size() << std::endl;
 
+	try {
+		// u.push(7);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+
+	try {
+		e.pop();
+	}
+	catch (Minimum_size_reached) {
+		std::cerr << "Lo stack é vuoto!" << std::endl;
+	}
+
 	return 0;
 }

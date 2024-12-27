@@ -3,6 +3,9 @@
 
 #include <iostream>
 
+struct Maximum_size_reached {};
+struct Minimum_size_reached {};
+
 class Stack {
 	friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
 private:
@@ -32,7 +35,7 @@ public:
 	void push(const int& value)
 	{
 		if (maximum_size == top_pos + 1) {
-			std::cout << "Lo stack é pieno!" << std::endl;
+			throw Maximum_size_reached();
 		} else {
 			top_pos++;
 			Items[top_pos] = value;
@@ -42,8 +45,7 @@ public:
 	int pop()
 	{
 		if (top_pos == -1) {
-			std::cout << "Lo stack é vuoto!" << std::endl;
-			return -1000;
+			throw Minimum_size_reached();
 		} else {
 			int old_top = Items[top_pos];
 			top_pos--;
@@ -54,8 +56,7 @@ public:
 	int peek() const
 	{
 		if (top_pos == -1) {
-			std::cout << "Lo stack é vuoto!" << std::endl;
-			return -1000;
+			throw Minimum_size_reached();
 		} else {
 			return Items[top_pos];
 		}
