@@ -6,5 +6,11 @@ main.exe: Stack.o
 Stack.o: Stack.cxx
 	g++ ${CXXFLAGS} -c Stack.cxx
 
-clean: 
+all: main.exe html
+
+html:
+	doxygen
+
+clean:
 	rm -f Stack.o main.exe
+	rm -rf html 
