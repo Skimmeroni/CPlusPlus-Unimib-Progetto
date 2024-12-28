@@ -17,7 +17,11 @@ private:
 public:
 	Stack()
 	: top_pos(-1), maximum_size(0), Items(nullptr)
-	{}
+	{
+		#ifndef NDEBUG
+		std::cout << "Stack::Stack()" << std::endl;
+		#endif
+	}
 
 	explicit Stack(const unsigned int& size)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
@@ -30,6 +34,10 @@ public:
 		}
 
 		maximum_size = size;
+
+		#ifndef NDEBUG
+		std::cout << "Stack::Stack(unsigned int)" << std::endl;
+		#endif
 	}
 
 	Stack(const unsigned int& size, const stack_value& value)
@@ -48,6 +56,10 @@ public:
 		}
 
 		maximum_size = size;
+
+		#ifndef NDEBUG
+		std::cout << "Stack::Stack(unsigned int, stack_value)" << std::endl;
+		#endif
 	}
 
 	Stack(const Stack& other)
@@ -66,11 +78,19 @@ public:
 		}
 
 		maximum_size = other.maximum_size;
+
+		#ifndef NDEBUG
+		std::cout << "Stack::Stack(const Stack&)" << std::endl;
+		#endif
 	}
 
 	~Stack()
 	{
 		delete[] Items;
+
+		#ifndef NDEBUG
+		std::cout << "Stack::~Stack()" << std::endl;
+		#endif
 	}
 
 	void push(const stack_value& value)
@@ -133,8 +153,12 @@ public:
 	Stack& operator=(const Stack& other) {
 		if (this != &other) {
 			Stack tmp(other);
-			tmp.swap(*this);
+			this->swap(tmp);
 		}
+
+		#ifndef NDEBUG
+		std::cout << "Stack::operator=(const Stack&)" << std::endl;
+		#endif
 
 		return *this;
 	}
