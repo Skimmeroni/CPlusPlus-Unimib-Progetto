@@ -14,25 +14,18 @@ private:
 	int top_pos;
 	unsigned int maximum_size;
 public:
-	Stack()
-	{
-		top_pos = -1;
-		maximum_size = 0;
-		Items = nullptr;
-	}
+	Stack() : top_pos(-1), maximum_size(0), Items(nullptr) {}
 
-	Stack(const unsigned int& size)
+	Stack(const unsigned int& size) : top_pos(-1), maximum_size(0), Items(nullptr)
 	{
-		top_pos = -1;
-		maximum_size = size;
-		Items = nullptr;
-
 		try {
 			Items = new int[size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
 		}
+
+		maximum_size = size;
 	}
 
 	~Stack()
@@ -40,11 +33,8 @@ public:
 		delete[] Items;
 	}
 
-	Stack(const Stack& other) {
-		top_pos = -1;
-		maximum_size = 0;
-		Items = nullptr;
-
+	Stack(const Stack& other) : top_pos(-1), maximum_size(0), Items(nullptr)
+	{
 		try {
 			Items = new int[other.maximum_size];
 		}
@@ -120,16 +110,16 @@ public:
 	}
 };
 
-	std::ostream& operator<<(std::ostream& os, const Stack& stack)
-	{
-		os << "[ ";
-		if (!stack.stack_empty()) {
-			for (unsigned int i = 0; i <= stack.top_pos; ++i) {
-				os << stack.Items[i] << " ";
-			}
+std::ostream& operator<<(std::ostream& os, const Stack& stack)
+{
+	os << "[ ";
+	if (!stack.stack_empty()) {
+		for (unsigned int i = 0; i <= stack.top_pos; ++i) {
+			os << stack.Items[i] << " ";
 		}
-			os << "]" << std::endl;
-		return os;
 	}
+	os << "]" << std::endl;
+	return os;
+}
 
 #endif
