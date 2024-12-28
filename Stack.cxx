@@ -1,5 +1,6 @@
 #include "Stack.hpp"
 #include <iostream>
+// #include <limits>
 
 int main()
 {
@@ -17,7 +18,7 @@ int main()
 	std::cout << u << "Dimensione: " << u.size() << std::endl;
 
 	try {
-		// u.push(7);
+		u.push(7);
 	}
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
@@ -29,6 +30,8 @@ int main()
 	catch (Minimum_size_reached) {
 		std::cerr << "Lo stack é vuoto!" << std::endl;
 	}
+
+	// Stack z((std::size_t)~0);
 
 	return 0;
 }

@@ -2,6 +2,7 @@
 #define _STACK_HPP
 
 #include <iostream>
+#include <algorithm>
 
 struct Maximum_size_reached {};
 struct Minimum_size_reached {};
@@ -24,12 +25,39 @@ public:
 	{
 		top_pos = -1;
 		maximum_size = size;
-		Items = new int[size];
+		Items = nullptr;
+
+		try {
+			Items = new int[size];
+		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+		}
 	}
 
 	~Stack()
 	{
 		delete[] Items;
+	}
+
+	Stack(const Stack& other) {
+		top_pos = -1;
+		maximum_size = 0;
+		Items = nullptr;
+
+		try {
+			Items = new int[other.maximum_size];
+		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+		}
+
+		for (unsigned int i = 0; i < other.maximum_size; ++i) {
+			Items[i] = other.Items[i];
+			top_pos++;
+		}
+
+		maximum_size = other.maximum_size;
 	}
 
 	void push(const int& value)
@@ -74,6 +102,21 @@ public:
 	unsigned int size() const
 	{
 		return maximum_size;	
+	}
+
+	void swap(Stack& other) {
+		std::swap(this->Items, other.Items);
+		std::swap(this->top_pos, other.top_pos);
+		std::swap(this->maximum_size, other.maximum_size);
+	}
+
+	Stack& operator=(const Stack& other) {
+		if (this != &other) {
+			Stack tmp(other);
+			tmp.swap(*this);
+		}
+
+		return *this;
 	}
 };
 
