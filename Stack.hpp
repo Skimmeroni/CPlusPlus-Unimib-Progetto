@@ -28,12 +28,7 @@ public:
 		maximum_size = size;
 	}
 
-	~Stack()
-	{
-		delete[] Items;
-	}
-
-	Stack(const Stack& other) : top_pos(-1), maximum_size(0), Items(nullptr)
+	explicit Stack(const Stack& other) : top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
 			Items = new int[other.maximum_size];
@@ -48,6 +43,28 @@ public:
 		}
 
 		maximum_size = other.maximum_size;
+	}
+
+	Stack(const unsigned int& size, const int& value) : top_pos(-1), maximum_size(0), Items(nullptr)
+	{
+		try {
+			Items = new int[size];
+		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+		}
+
+		for (unsigned int i = 0; i < size; ++i) {
+			Items[i] = value;
+			top_pos++;
+		}
+
+		maximum_size = size;
+	}
+
+	~Stack()
+	{
+		delete[] Items;
 	}
 
 	void push(const int& value)
