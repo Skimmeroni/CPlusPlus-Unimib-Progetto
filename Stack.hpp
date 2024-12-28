@@ -14,9 +14,12 @@ private:
 	int top_pos;
 	unsigned int maximum_size;
 public:
-	Stack() : top_pos(-1), maximum_size(0), Items(nullptr) {}
+	Stack()
+	: top_pos(-1), maximum_size(0), Items(nullptr)
+	{}
 
-	Stack(const unsigned int& size) : top_pos(-1), maximum_size(0), Items(nullptr)
+	explicit Stack(const unsigned int& size)
+	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
 			Items = new int[size];
@@ -28,24 +31,8 @@ public:
 		maximum_size = size;
 	}
 
-	explicit Stack(const Stack& other) : top_pos(-1), maximum_size(0), Items(nullptr)
-	{
-		try {
-			Items = new int[other.maximum_size];
-		}
-		catch (std::bad_alloc) {
-			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
-		}
-
-		for (unsigned int i = 0; i < other.maximum_size; ++i) {
-			Items[i] = other.Items[i];
-			top_pos++;
-		}
-
-		maximum_size = other.maximum_size;
-	}
-
-	Stack(const unsigned int& size, const int& value) : top_pos(-1), maximum_size(0), Items(nullptr)
+	Stack(const unsigned int& size, const int& value)
+	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
 			Items = new int[size];
@@ -60,6 +47,24 @@ public:
 		}
 
 		maximum_size = size;
+	}
+
+	Stack(const Stack& other)
+	: top_pos(-1), maximum_size(0), Items(nullptr)
+	{
+		try {
+			Items = new int[other.maximum_size];
+		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+		}
+
+		for (unsigned int i = 0; i < other.maximum_size; ++i) {
+			Items[i] = other.Items[i];
+			top_pos++;
+		}
+
+		maximum_size = other.maximum_size;
 	}
 
 	~Stack()
@@ -109,6 +114,13 @@ public:
 	unsigned int size() const
 	{
 		return maximum_size;	
+	}
+
+	void fill(const int& value)
+	{
+		for (unsigned int i = 0; i < maximum_size; ++i) {
+			Items[i] = value;
+		}
 	}
 
 	void swap(Stack& other) {
