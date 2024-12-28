@@ -9,8 +9,9 @@ struct Minimum_size_reached {};
 
 class Stack {
 	friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
+	typedef int stack_value;
 private:
-	int* Items;
+	stack_value* Items;
 	int top_pos;
 	unsigned int maximum_size;
 public:
@@ -22,7 +23,7 @@ public:
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
-			Items = new int[size];
+			Items = new stack_value[size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
@@ -31,11 +32,11 @@ public:
 		maximum_size = size;
 	}
 
-	Stack(const unsigned int& size, const int& value)
+	Stack(const unsigned int& size, const stack_value& value)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
-			Items = new int[size];
+			Items = new stack_value[size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
@@ -53,7 +54,7 @@ public:
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
-			Items = new int[other.maximum_size];
+			Items = new stack_value[other.maximum_size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
@@ -72,7 +73,7 @@ public:
 		delete[] Items;
 	}
 
-	void push(const int& value)
+	void push(const stack_value& value)
 	{
 		if (maximum_size == top_pos + 1) {
 			throw Maximum_size_reached();
@@ -82,18 +83,18 @@ public:
 		}
 	}
 
-	int pop()
+	stack_value pop()
 	{
 		if (top_pos == -1) {
 			throw Minimum_size_reached();
 		} else {
-			int old_top = Items[top_pos];
+			stack_value old_top = Items[top_pos];
 			top_pos--;
 			return old_top;
 		}
 	}
 
-	int peek() const
+	stack_value peek() const
 	{
 		if (top_pos == -1) {
 			throw Minimum_size_reached();
@@ -116,7 +117,7 @@ public:
 		return maximum_size;	
 	}
 
-	void fill(const int& value)
+	void fill(const stack_value& value)
 	{
 		for (unsigned int i = 0; i < maximum_size; ++i) {
 			Items[i] = value;
