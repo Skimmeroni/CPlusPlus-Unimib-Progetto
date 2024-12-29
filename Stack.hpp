@@ -274,11 +274,33 @@ public:
 
 		Metodo che restituisce la dimensione massima dello stack
 
+		Nota: sebbene la dimensione massima di uno stack venga
+		definita nei costruttori, questo metodo potrebbe comunque
+		rivelarsi necessario, ad esempio se uno stack viene creato
+		mediante =
+
 		@return la dimensione massima dello stack
 	*/
 	unsigned int size() const
 	{
-		return maximum_size;	
+		return maximum_size;
+	}
+
+	/**
+		@brief Head
+
+		Metodo che restituisce la posizione della cima dello stack.
+		Restituisce -1 se lo stack é vuoto
+
+		Nota: le posizioni dello stack, in accordo con la convenzione
+		usata per gli array, partono da 0. Pertanto, il numero di
+		elementi nello stack é head + 1
+
+		@return la posizione della cima dello stack
+	*/
+	int head() const
+	{
+		return top_pos;
 	}
 
 	/**
