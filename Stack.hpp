@@ -79,6 +79,7 @@ public:
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			throw;
 		}
 
 		maximum_size = size;
@@ -114,6 +115,7 @@ public:
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			throw;
 		}
 
 		for (unsigned int i = 0; i < size; ++i) {
@@ -150,6 +152,7 @@ public:
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			throw;
 		}
 
 		for (unsigned int i = 0; i < other.maximum_size; ++i) {
