@@ -1,6 +1,24 @@
 #include "Stack.hpp"
 #include <iostream>
 
+struct Comparison1 {
+	bool operator()(int a) const {
+		return a > 3;
+	}
+};
+
+struct Comparison2 {
+	bool operator()(int a) const {
+		return (a % 2) == 0;
+	}
+};
+
+struct Comparison3 {
+	bool operator()(int a) const {
+		return a > 100;
+	}
+};
+
 int main()
 {
 	/* Stack vuoto */
@@ -72,6 +90,30 @@ int main()
 	/* Assegnamento */
 	e = p;
 	std::cout << e << "Dimensione: " << e.size() << std::endl;
+
+	/* Filtering */
+	Stack a(10);
+	for (int i = 0; i < a.size(); ++i) {
+		try {
+			a.push(i);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
+	std::cout << a << "Dimensione: " << a.size() << std::endl;
+
+	Comparison1 C1;
+	Stack a1 = a.filter_out<Comparison1>(C1);
+	std::cout << a1 << "Dimensione: " << a1.size() << std::endl;
+
+	Comparison2 C2;
+	Stack a2 = a.filter_out<Comparison2>(C2);
+	std::cout << a2 << "Dimensione: " << a2.size() << std::endl;
+
+	Comparison3 C3;
+	Stack a3 = a.filter_out<Comparison3>(C3);
+	std::cout << a3 << "Dimensione: " << a3.size() << std::endl;
 
 	/* Allocazione impossibile */
 	// Stack z(3567587328);

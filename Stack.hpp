@@ -155,11 +155,11 @@ public:
 			throw;
 		}
 
-		for (unsigned int i = 0; i < other.maximum_size; ++i) {
+		for (unsigned int i = 0; i < other.top_pos + 1; ++i) {
 			Items[i] = other.Items[i];
-			top_pos++;
 		}
 
+		top_pos = other.top_pos;
 		maximum_size = other.maximum_size;
 
 		#ifndef NDEBUG
@@ -406,6 +406,30 @@ public:
 		#endif
 
 		return *this;
+	}
+
+	/**
+		@brief Filter out
+
+		Metodo che prende in input un predicato di tipo generico e ritorna
+		uno stack costituito solamente dagli elementi dello stack chiamante
+		che rispettano il predicato
+
+		@param predicate il predicato con cui testare lo stack
+
+		@return uno stack opportunamente costruito
+	*/
+	template <typename P>
+	Stack filter_out(P predicate) {
+		Stack S(this->maximum_size);
+
+		for (unsigned int i = 0; i <= this->top_pos; ++i) {
+			if (predicate(this->Items[i]) == true) {
+				S.push(Items[i]);
+			}
+		}
+
+		return S;
 	}
 };
 
