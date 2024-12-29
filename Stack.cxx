@@ -57,6 +57,8 @@ int main()
 	/* Carico di uno stack con il medesimo valore mediante costruttore */
 	Stack p(5, 100);
 	std::cout << p << "Dimensione: " << p.size() << std::endl;
+	p.clear();
+	std::cout << p << "Dimensione: " << p.size() << std::endl;
 
 	/* Carico di uno stack con il medesimo valore mediante fill() */
 	Stack f(5);

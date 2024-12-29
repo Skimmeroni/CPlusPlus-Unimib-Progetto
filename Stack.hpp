@@ -179,6 +179,7 @@ public:
 	~Stack()
 	{
 		delete[] Items;
+		Items = nullptr;
 		maximum_size = 0;
 		top_pos = -1;
 
@@ -340,6 +341,22 @@ public:
 		#ifndef NDEBUG
 		std::cout << "Stack::fill(const stack_value&)" << std::endl;
 		#endif
+	}
+
+	/**
+		@brief Clear
+
+		Metodo che svuota tutte le celle dello stack
+
+		Nota: non é necessario modificare nessun valore
+		dello stack, é sufficiente porre la posizione 
+		a -1. I valori nelle celle sono perduti comunque
+
+		@post top_pos == -1
+	*/
+	void clear()
+	{
+		top_pos = -1;
 	}
 
 	/**
