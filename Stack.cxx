@@ -1,6 +1,5 @@
 #include "Stack.hpp"
 #include <iostream>
-// #include <limits>
 
 int main()
 {
@@ -73,7 +72,7 @@ int main()
 	std::cout << e << "Dimensione: " << e.size() << std::endl;
 
 	/* Allocazione impossibile */
-	// Stack z((std::size_t)~0);
+	// Stack z(3567587328);
 
 	return 0;
 }

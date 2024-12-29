@@ -312,12 +312,34 @@ public:
 		Metodo che riempie tutte le celle dello stack con il valore dato
 
 		@param value il valore con cui riempire lo stack
+
+		@post Items[i] == value
 	*/
 	void fill(const stack_value& value)
 	{
-		for (unsigned int i = 0; i < maximum_size; ++i) {
-			Items[i] = value;
+		stack_value* tmp = nullptr;
+
+		try {
+			tmp = new stack_value[maximum_size];
 		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			throw;
+		}
+
+		for (unsigned int i = 0; i < maximum_size; ++i) {
+			tmp[i] = value;
+		}
+
+		std::swap(Items, tmp);
+		delete[] tmp;
+		tmp = nullptr;
+
+		top_pos = maximum_size - 1;
+
+		#ifndef NDEBUG
+		std::cout << "Stack::fill(const stack_value&)" << std::endl;
+		#endif
 	}
 
 	/**
