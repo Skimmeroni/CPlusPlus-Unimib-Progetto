@@ -15,7 +15,7 @@ int main()
 	}
 
 	/* Stack pieno */
-	Stack u(1);
+	Stack u(1, 1);
 	std::cout << u << "Dimensione: " << u.size() << std::endl;
 
 	try {
@@ -27,12 +27,31 @@ int main()
 
 	/* Carico e scarico di uno stack */
 	Stack s(10);
-		for (int i = 0; i < s.size(); ++i) {
-		s.push(i);
+	for (int i = 0; i < s.size(); ++i) {
+		try {
+			s.push(i);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
 	}
 	std::cout << s << "Dimensione: " << s.size() << std::endl;
-		for (unsigned int i = 0; i < s.size(); ++i) {
-		s.pop();
+	for (unsigned int i = 0; i < 3; ++i) {
+		try {
+			s.pop();
+		}
+		catch (Minimum_size_reached) {
+			std::cerr << "Lo stack é vuoto!" << std::endl;
+		}
+	}
+	std::cout << s << "Dimensione: " << s.size() << std::endl;
+	for (unsigned int i = 0; i < s.size() - 3; ++i) {
+		try {
+			s.pop();
+		}
+		catch (Minimum_size_reached) {
+			std::cerr << "Lo stack é vuoto!" << std::endl;
+		}
 	}
 	std::cout << s << "Dimensione: " << s.size() << std::endl;
 
