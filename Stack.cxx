@@ -1,5 +1,6 @@
 #include "Stack.hpp"
 #include <iostream>
+#include <cmath>
 
 struct Comparison1 {
 	bool operator()(int a) const {
@@ -16,6 +17,18 @@ struct Comparison2 {
 struct Comparison3 {
 	bool operator()(int a) const {
 		return a > 100;
+	}
+};
+
+struct Modifier1 {
+	int operator()(int a) const {
+		return a + 1;
+	}
+};
+
+struct Modifier2 {
+	int operator()(int a) const {
+		return static_cast<int>(sqrt(a));
 	}
 };
 
@@ -114,6 +127,24 @@ int main()
 	Comparison3 C3;
 	Stack a3 = a.filter_out<Comparison3>(C3);
 	std::cout << a3 << "Dimensione: " << a3.size() << std::endl;
+
+	/* Trasformazione */
+	Stack g(5, 100);
+	std::cout << g << "Dimensione: " << g.size() << std::endl;
+	Modifier1 M1;
+	transform<Modifier1>(g, M1);
+	std::cout << g << "Dimensione: " << g.size() << std::endl;
+
+	Stack h(5);
+	h.push(100);
+	h.push(200);
+	h.push(300);
+	h.push(400);
+	h.push(500);
+	std::cout << h << "Dimensione: " << h.size() << std::endl;
+	Modifier2 M2;
+	transform<Modifier2>(h, M2);
+	std::cout << h << "Dimensione: " << h.size() << std::endl;
 
 	/* Allocazione impossibile */
 	// Stack z(3567587328);

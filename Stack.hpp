@@ -23,6 +23,9 @@ struct Minimum_size_reached {};
 */
 class Stack {
 	friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
+	template <typename F>
+	friend void transform(const Stack& stack, F functor);
+
 	typedef int stack_value;
 private:
 	stack_value* Items;        // puntatore all'array statico
@@ -459,6 +462,25 @@ std::ostream& operator<<(std::ostream& os, const Stack& stack)
 	}
 	os << "}" << std::endl;
 	return os;
+}
+
+/**
+	@brief Transform
+
+	Funzione che prende in input uno stack ed un funtore di tipo generico
+	e modifica tutti gli elementi dello stack applicandovi tale funtore
+
+	@param stack lo stack da modificare
+	@param functor il funtore da applicare agli elementi dello stack
+
+	@post stack.Items[i] = functor(stack.Items[i])
+*/
+template <typename F>
+void transform(const Stack& stack, F functor)
+{
+	for (unsigned int i = 0; i <= stack.top_pos; ++i) {
+		stack.Items[i] = functor(stack.Items[i]);
+	}
 }
 
 #endif
