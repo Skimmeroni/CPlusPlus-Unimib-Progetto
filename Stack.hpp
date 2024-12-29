@@ -382,13 +382,16 @@ public:
 */
 std::ostream& operator<<(std::ostream& os, const Stack& stack)
 {
-	os << "[ ";
+	os << "{ ";
 	if (!stack.stack_empty()) {
 		for (unsigned int i = 0; i <= stack.top_pos; ++i) {
-			os << stack.Items[i] << " ";
+			os << "[" << stack.Items[i] << "] ";
 		}
 	}
-	os << "]" << std::endl;
+	for (unsigned int i = stack.top_pos + 1; i < stack.maximum_size; ++i) {
+		os << "[] ";
+	}
+	os << "}" << std::endl;
 	return os;
 }
 
