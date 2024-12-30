@@ -347,6 +347,48 @@ public:
 	}
 
 	/**
+		@brief Load
+
+		Metodo che prende in input una coppia di iteratori, uno che
+		punta all'inizio di una sequenza e uno che punta alla fine
+		di una sequenza, e che riempie uno stack con i valori nel
+		mezzo. Se lo stack contiene giá dei valori, viene svuotato
+
+		@param it_s un iteratore che punta all'inizio della sequenza
+		@param it_e un iteratore che punta alla fine della sequenza
+
+		@post maximum_size = it_e - it_s
+		@post top_pos = maximum_size - 1
+		@post Items != nullptr
+
+		@throw std::bad_alloc se l'allocazione della memoria fallisce
+	*/
+
+	template <typename I>
+	void load(I it_s, I it_e)
+	{
+		if (Items != nullptr) {
+			delete[] Items;
+			Items = nullptr;
+		}
+
+		maximum_size = it_e - it_s;
+		top_pos = maximum_size - 1;
+
+		try {
+			Items = new stack_value[maximum_size];
+		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			throw;
+		}
+
+		for (unsigned int i = 0; it_s != it_e; ++i, it_s++) {
+			Items[i] = *it_s;
+		}
+	}
+
+	/**
 		@brief Clear
 
 		Metodo che svuota tutte le celle dello stack

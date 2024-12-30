@@ -1,6 +1,7 @@
 #include "Stack.hpp"
 #include <iostream>
 #include <cmath>
+#include <array>
 
 struct Comparison1 {
 	bool operator()(int a) const {
@@ -145,6 +146,16 @@ int main()
 	Modifier2 M2;
 	transform<Modifier2>(h, M2);
 	std::cout << h << "Dimensione: " << h.size() << std::endl;
+
+	/* */
+
+    std::array<int, 5> arr = {10, 20, 30, 40, 50};
+	std::array<int, 5>::iterator it1 = arr.begin();
+	std::array<int, 5>::iterator it2 = arr.end();
+
+	Stack st(5, 5);
+	st.load(it1, it2);
+	std::cout << st << "Dimensione: " << st.size() << std::endl;
 
 	/* Allocazione impossibile */
 	// Stack z(3567587328);
