@@ -176,6 +176,19 @@ int main()
 	n.load(itt1, itt2);
 	std::cout << n << "Dimensione: " << n.size() << std::endl;
 
+	Stack o(5);
+	o.push(85);
+	o.push(86);
+	o.push(87);
+	o.push(88);
+	o.push(89);
+	Stack::iterator ob = o.begin();
+	Stack::iterator oe = o.end();
+	while (ob != oe) {
+		std::cout << *ob << std::endl;
+		ob++;
+	}
+
 	/* Allocazione impossibile */
 	// Stack z(3567587328);
 

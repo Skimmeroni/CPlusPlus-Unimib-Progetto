@@ -544,6 +544,102 @@ public:
 
 		return S;
 	}
+
+	// class const_iterator;
+
+	class iterator {
+	public:
+		typedef std::forward_iterator_tag iterator_category;
+		typedef stack_value               value_type;
+		typedef ptrdiff_t                 difference_type;
+		typedef stack_value*              pointer;
+		typedef stack_value&              reference;
+
+		// Costruttore di default
+		iterator() : ptr(nullptr) {}
+
+		// Copy constructor
+		iterator(const iterator &other) : ptr(nullptr)
+		{
+			this->ptr = other.ptr;
+		}
+
+		// Operatore di assegnamento
+		iterator& operator=(const iterator &other)
+		{
+			this->ptr = other.ptr;
+			return *this;
+		}
+
+		// Distruttore
+		~iterator() {}
+
+		// Ritorna il dato riferito dall'iteratore (dereferenziamento)
+		reference operator*() const {
+			return *ptr;
+		}
+
+		// Ritorna il puntatore al dato riferito dall'iteratore
+			pointer operator->() const {
+			return &(*ptr);
+		}
+
+		// Operatore di iterazione pre-incremento
+		iterator& operator++() {
+			ptr++;
+			return *this;
+		}
+
+		// Operatore di iterazione post-incremento
+		iterator operator++(int dummy) {
+			iterator tmp(*this);
+			++(*this);
+			return tmp;
+		}
+
+		// Uguaglianza
+		bool operator==(const iterator &other) const {
+			return ptr == other.ptr;
+		}
+
+		// Diversita'
+		bool operator!=(const iterator &other) const {
+			return ptr != other.ptr;
+		}
+
+		//friend class const_iterator;
+
+		// Uguaglianza
+		//bool operator==(const const_iterator &other) const {
+			//!!!
+		//}
+
+		// Diversita'
+		//bool operator!=(const const_iterator &other) const {
+			//!!!
+		//}
+	private:
+		stack_value* ptr;
+
+		friend class Stack;
+
+		// Costruttore privato di inizializzazione usato dalla classe Stack
+		// per i metodi begin() e end()
+		iterator(stack_value* n) : ptr(n) {}
+	};
+
+	// Ritorna l'iteratore all'inizio della sequenza
+	iterator begin() {
+		return iterator(&Items[0]);
+	}
+
+	// Ritorna l'iteratore alla fine della sequenza
+
+	// Nota: quel +1 é molto sospetto
+
+	iterator end() {
+		return iterator(&Items[top_pos] + 1);
+	}
 };
 
 /**
