@@ -11,9 +11,38 @@
 
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 
 struct Maximum_size_reached {};
 struct Minimum_size_reached {};
+
+/**
+	@brief Distance
+
+	Funzione di supporto che calcola la distanza fra due iteratori
+	generici (dello stesso tipo). Versione semplificata della omonima
+	funzione presente nella libreria standard
+
+	Nota: nel caso dei puntatori, viene saltato un valore
+
+	@param start l'iteratore di prima posizione
+	@param end l'iteratore di ultima posizione
+
+	@return la distanza fra i due iteratori
+*/
+
+template<class I>
+typename std::iterator_traits<I>::difference_type
+distance(I start, I end)
+{
+	typename std::iterator_traits<I>::difference_type distance = 0;
+	while (start != end) {
+		distance++;
+		start++;
+	}
+
+	return distance;
+}
 
 /**
 	@brief Classe Stack
@@ -141,8 +170,7 @@ public:
 		di una sequenza, e che riempie uno stack con i valori nel mezzo
 
 		Nota: non ancora terminato. Il puntatore hardcoded andrebbe
-		sostituito con un iteratore templato. Infatti, per il momento
-		un valore viene perduto
+		sostituito con un iteratore templato.
 
 		@param it_s un iteratore che punta all'inizio della sequenza
 		@param it_e un iteratore che punta alla fine della sequenza
@@ -157,7 +185,7 @@ public:
 	Stack(stack_value* it_s, stack_value* it_e)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
-		maximum_size = it_e - it_s;
+		maximum_size = distance(it_s, it_e);
 		top_pos = maximum_size - 1;
 
 		try {
@@ -412,7 +440,7 @@ public:
 			Items = nullptr;
 		}
 
-		maximum_size = it_e - it_s;
+		maximum_size = distance(it_s, it_e);
 		top_pos = maximum_size - 1;
 
 		try {

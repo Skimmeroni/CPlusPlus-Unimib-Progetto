@@ -158,10 +158,22 @@ int main()
 	m.load(it1, it2);
 	std::cout << m << "Dimensione: " << m.size() << std::endl;
 
+	m.load(it1, it1);
+	std::cout << m << "Dimensione: " << m.size() << std::endl;
+
+	m.load(it2, it2);
+	std::cout << m << "Dimensione: " << m.size() << std::endl;
+
 	int arrr[5] = {10, 20, 30, 40, 50};
 	int* itt1 = &arrr[0];
 	int* itt2 = &arrr[4];
 	Stack n(itt1, itt2);
+	std::cout << n << "Dimensione: " << n.size() << std::endl;
+
+	n.load(itt1, itt1);
+	std::cout << n << "Dimensione: " << n.size() << std::endl;
+
+	n.load(itt1, itt2);
 	std::cout << n << "Dimensione: " << n.size() << std::endl;
 
 	/* Allocazione impossibile */
