@@ -147,7 +147,7 @@ int main()
 	transform<Modifier2>(h, M2);
 	std::cout << h << "Dimensione: " << h.size() << std::endl;
 
-	/* */
+	/* Caricamento mediante coppia di iteratori */
 
     std::array<int, 5> arr = {10, 20, 30, 40, 50};
 	std::array<int, 5>::iterator it1 = arr.begin();
@@ -156,6 +156,12 @@ int main()
 	Stack st(5, 5);
 	st.load(it1, it2);
 	std::cout << st << "Dimensione: " << st.size() << std::endl;
+
+	int arrr[5] = {10, 20, 30, 40, 50};
+	int* itt1 = &arrr[0];
+	int* itt2 = &arrr[4];
+	Stack stt(itt1, itt2);
+	std::cout << stt << "Dimensione: " << stt.size() << std::endl;
 
 	/* Allocazione impossibile */
 	// Stack z(3567587328);

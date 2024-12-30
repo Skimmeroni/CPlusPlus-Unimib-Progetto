@@ -133,6 +133,46 @@ public:
 		#endif
 	}
 
+		/**
+		@brief Costruttore secondario
+
+		Costruttore secondario, che prende in input una coppia di iteratori,
+		uno che punta all'inizio di una sequenza e uno che punta alla fine
+		di una sequenza, e che riempie uno stack con i valori nel mezzo
+
+		Nota: non ancora terminato. Il puntatore hardcoded andrebbe
+		sostituito con un iteratore templato. Infatti, per il momento
+		un valore viene perduto
+
+		@param it_s un iteratore che punta all'inizio della sequenza
+		@param it_e un iteratore che punta alla fine della sequenza
+
+		@post maximum_size = it_e - it_s
+		@post top_pos = maximum_size - 1
+
+		@throw std::bad_alloc se l'allocazione della memoria fallisce
+	*/
+
+	// template <typename I>
+	Stack(stack_value* it_s, stack_value* it_e)
+	: top_pos(-1), maximum_size(0), Items(nullptr)
+	{
+		maximum_size = it_e - it_s;
+		top_pos = maximum_size - 1;
+
+		try {
+			Items = new stack_value[maximum_size];
+		}
+		catch (std::bad_alloc) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			throw;
+		}
+
+		for (unsigned int i = 0; it_s != it_e; ++i, it_s++) {
+			Items[i] = *it_s;
+		}
+	}
+
 	/**
 		@brief Costruttore di copia
 
