@@ -133,7 +133,7 @@ public:
 		#endif
 	}
 
-		/**
+	/**
 		@brief Costruttore secondario
 
 		Costruttore secondario, che prende in input una coppia di iteratori,

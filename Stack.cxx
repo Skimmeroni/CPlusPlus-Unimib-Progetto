@@ -36,116 +36,117 @@ struct Modifier2 {
 int main()
 {
 	/* Stack vuoto */
-	Stack e;
-	std::cout << e << "Dimensione: " << e.size() << std::endl;
+	Stack a;
+	std::cout << a << "Dimensione: " << a.size() << std::endl;
 	try {
-		e.pop();
+		a.pop();
 	}
 	catch (Minimum_size_reached) {
 		std::cerr << "Lo stack é vuoto!" << std::endl;
 	}
 
 	/* Stack pieno */
-	Stack u(1, 1);
-	std::cout << u << "Dimensione: " << u.size() << std::endl;
+	Stack b(1, 1);
+	std::cout << b << "Dimensione: " << b.size() << std::endl;
 
 	try {
-		u.push(7);
+		b.push(7);
 	}
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
 
 	/* Carico e scarico di uno stack */
-	Stack s(10);
-	for (int i = 0; i < s.size(); ++i) {
+	Stack c(10);
+	for (int i = 0; i < c.size(); ++i) {
 		try {
-			s.push(i);
+			c.push(i);
 		}
 		catch (Maximum_size_reached) {
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	std::cout << s << "Dimensione: " << s.size() << std::endl;
+	std::cout << c << "Dimensione: " << c.size() << std::endl;
 	for (unsigned int i = 0; i < 3; ++i) {
 		try {
-			s.pop();
+			c.pop();
 		}
 		catch (Minimum_size_reached) {
 			std::cerr << "Lo stack é vuoto!" << std::endl;
 		}
 	}
-	std::cout << s << "Dimensione: " << s.size() << std::endl;
-	for (unsigned int i = 0; i < s.size() - 3; ++i) {
+	std::cout << c << "Dimensione: " << c.size() << std::endl;
+	for (unsigned int i = 0; i < c.size() - 3; ++i) {
 		try {
-			s.pop();
+			c.pop();
 		}
 		catch (Minimum_size_reached) {
 			std::cerr << "Lo stack é vuoto!" << std::endl;
 		}
 	}
-	std::cout << s << "Dimensione: " << s.size() << std::endl;
+	std::cout << c << "Dimensione: " << c.size() << std::endl;
 
 	/* Carico di uno stack con il medesimo valore mediante costruttore */
-	Stack p(5, 100);
-	std::cout << p << "Dimensione: " << p.size() << std::endl;
-	p.clear();
-	std::cout << p << "Dimensione: " << p.size() << std::endl;
+	Stack d(5, 100);
+	std::cout << d << "Dimensione: " << d.size() << std::endl;
+	d.clear();
+	std::cout << d << "Dimensione: " << d.size() << std::endl;
 
 	/* Carico di uno stack con il medesimo valore mediante fill() */
-	Stack f(5);
-	f.fill(5);
-	std::cout << f << "Dimensione: " << f.size() << std::endl;
-
-	/* Costruttore di copia */
-	Stack w = p;
-	std::cout << w << "Dimensione: " << w.size() << std::endl;
-
-	/* Assegnamento */
-	e = p;
+	Stack e(5);
+	e.fill(5);
 	std::cout << e << "Dimensione: " << e.size() << std::endl;
 
+	/* Costruttore di copia */
+	Stack f = d;
+	std::cout << f << "Dimensione: " << f.size() << std::endl;
+
+	/* Assegnamento */
+	Stack g;
+	g = d;
+	std::cout << g << "Dimensione: " << g.size() << std::endl;
+
 	/* Filtering */
-	Stack a(10);
-	for (int i = 0; i < a.size(); ++i) {
+	Stack h(10);
+	for (int i = 0; i < h.size(); ++i) {
 		try {
-			a.push(i);
+			h.push(i);
 		}
 		catch (Maximum_size_reached) {
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << h << "Dimensione: " << h.size() << std::endl;
 
 	Comparison1 C1;
-	Stack a1 = a.filter_out<Comparison1>(C1);
-	std::cout << a1 << "Dimensione: " << a1.size() << std::endl;
+	Stack j1 = h.filter_out<Comparison1>(C1);
+	std::cout << j1 << "Dimensione: " << j1.size() << std::endl;
 
 	Comparison2 C2;
-	Stack a2 = a.filter_out<Comparison2>(C2);
-	std::cout << a2 << "Dimensione: " << a2.size() << std::endl;
+	Stack j2 = h.filter_out<Comparison2>(C2);
+	std::cout << j2 << "Dimensione: " << j2.size() << std::endl;
 
 	Comparison3 C3;
-	Stack a3 = a.filter_out<Comparison3>(C3);
-	std::cout << a3 << "Dimensione: " << a3.size() << std::endl;
+	Stack j3 = h.filter_out<Comparison3>(C3);
+	std::cout << j3 << "Dimensione: " << j3.size() << std::endl;
 
 	/* Trasformazione */
-	Stack g(5, 100);
-	std::cout << g << "Dimensione: " << g.size() << std::endl;
+	Stack k(5, 100);
+	std::cout << k << "Dimensione: " << k.size() << std::endl;
 	Modifier1 M1;
-	transform<Modifier1>(g, M1);
-	std::cout << g << "Dimensione: " << g.size() << std::endl;
+	transform<Modifier1>(k, M1);
+	std::cout << k << "Dimensione: " << k.size() << std::endl;
 
-	Stack h(5);
-	h.push(100);
-	h.push(200);
-	h.push(300);
-	h.push(400);
-	h.push(500);
-	std::cout << h << "Dimensione: " << h.size() << std::endl;
+	Stack l(5);
+	l.push(100);
+	l.push(200);
+	l.push(300);
+	l.push(400);
+	l.push(500);
+	std::cout << l << "Dimensione: " << l.size() << std::endl;
 	Modifier2 M2;
-	transform<Modifier2>(h, M2);
-	std::cout << h << "Dimensione: " << h.size() << std::endl;
+	transform<Modifier2>(l, M2);
+	std::cout << l << "Dimensione: " << l.size() << std::endl;
 
 	/* Caricamento mediante coppia di iteratori */
 
@@ -153,15 +154,15 @@ int main()
 	std::array<int, 5>::iterator it1 = arr.begin();
 	std::array<int, 5>::iterator it2 = arr.end();
 
-	Stack st(5, 5);
-	st.load(it1, it2);
-	std::cout << st << "Dimensione: " << st.size() << std::endl;
+	Stack m(5, 5);
+	m.load(it1, it2);
+	std::cout << m << "Dimensione: " << m.size() << std::endl;
 
 	int arrr[5] = {10, 20, 30, 40, 50};
 	int* itt1 = &arrr[0];
 	int* itt2 = &arrr[4];
-	Stack stt(itt1, itt2);
-	std::cout << stt << "Dimensione: " << stt.size() << std::endl;
+	Stack n(itt1, itt2);
+	std::cout << n << "Dimensione: " << n.size() << std::endl;
 
 	/* Allocazione impossibile */
 	// Stack z(3567587328);

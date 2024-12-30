@@ -8,6 +8,9 @@ Stack.o: Stack.cxx Stack.hpp
 
 all: main.exe html
 
+run: main.exe
+	./main.exe
+
 html:
 	doxygen
 
