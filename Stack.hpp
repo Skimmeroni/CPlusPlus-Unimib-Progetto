@@ -55,11 +55,7 @@ public:
 	typedef int stack_value;
 	class iterator;
 	class const_iterator;
-private:	
-	friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
-	template <typename F>
-	friend void transform(const Stack& stack, F functor);
-
+private:
 	stack_value* Items;        // puntatore all'array statico
 	int top_pos;               // posizione della cima dello stack
 	unsigned int maximum_size; // dimensione (massima) dello stack
@@ -350,7 +346,8 @@ public:
 	/**
 		@brief Size
 
-		Metodo che restituisce la dimensione massima dello stack
+		Metodo che restituisce la dimensione massima dello stack.
+		Utile per la stampa
 
 		Nota: sebbene la dimensione massima di uno stack venga
 		definita nei costruttori, questo metodo potrebbe comunque
@@ -368,7 +365,7 @@ public:
 		@brief Head
 
 		Metodo che restituisce la posizione della cima dello stack.
-		Restituisce -1 se lo stack é vuoto
+		Restituisce -1 se lo stack é vuoto. Utile per la stampa
 
 		Nota: le posizioni dello stack, in accordo con la convenzione
 		usata per gli array, partono da 0. Pertanto, il numero di
@@ -781,16 +778,20 @@ public:
 */
 std::ostream& operator<<(std::ostream& os, const Stack& stack)
 {
+	Stack::const_iterator start = stack.begin();
+	Stack::const_iterator end = stack.end();
+
 	os << "{ ";
-	if (!stack.stack_empty()) {
-		for (unsigned int i = 0; i <= stack.top_pos; ++i) {
-			os << "[" << stack.Items[i] << "] ";
-		}
+	while (start != end) {
+		os << "[" << *start << "] ";
+		start++;
 	}
-	for (unsigned int i = stack.top_pos + 1; i < stack.maximum_size; ++i) {
+
+	for (unsigned int i = stack.head() + 1; i < stack.size(); ++i) {
 		os << "[] ";
 	}
 	os << "}" << std::endl;
+
 	return os;
 }
 
@@ -806,10 +807,14 @@ std::ostream& operator<<(std::ostream& os, const Stack& stack)
 	@post stack.Items[i] = functor(stack.Items[i])
 */
 template <typename F>
-void transform(const Stack& stack, F functor)
+void transform(Stack& stack, F functor)
 {
-	for (unsigned int i = 0; i <= stack.top_pos; ++i) {
-		stack.Items[i] = functor(stack.Items[i]);
+	Stack::iterator start = stack.begin();
+	Stack::iterator end = stack.end();
+
+	while (start != end) {
+		*start = functor(*start);
+		start++;
 	}
 }
 
