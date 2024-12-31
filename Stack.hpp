@@ -485,7 +485,8 @@ public:
 		@post this->top_pos == other.top_pos
 		@post this->maximum_size == other.maximum_size
 	*/
-	void swap(Stack& other) {
+	void swap(Stack& other)
+	{
 		std::swap(this->Items, other.Items);
 		std::swap(this->top_pos, other.top_pos);
 		std::swap(this->maximum_size, other.maximum_size);
@@ -508,7 +509,8 @@ public:
 
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
 	*/
-	Stack& operator=(const Stack& other) {
+	Stack& operator=(const Stack& other)
+	{
 		if (this != &other) {
 			Stack tmp(other);
 			this->swap(tmp);
@@ -533,7 +535,8 @@ public:
 		@return uno stack opportunamente costruito
 	*/
 	template <typename P>
-	Stack filter_out(P predicate) {
+	Stack filter_out(P predicate)
+	{
 		Stack S(this->maximum_size);
 
 		for (unsigned int i = 0; i <= this->top_pos; ++i) {
@@ -545,7 +548,7 @@ public:
 		return S;
 	}
 
-	// class const_iterator;
+	class const_iterator;
 
 	class iterator {
 	public:
@@ -575,49 +578,59 @@ public:
 		~iterator() {}
 
 		// Ritorna il dato riferito dall'iteratore (dereferenziamento)
-		reference operator*() const {
+		reference operator*() const
+		{
 			return *ptr;
 		}
 
 		// Ritorna il puntatore al dato riferito dall'iteratore
-			pointer operator->() const {
+
+		// Nota: da rivedere
+		pointer operator->() const
+		{
 			return &(*ptr);
 		}
 
 		// Operatore di iterazione pre-incremento
-		iterator& operator++() {
+		iterator& operator++()
+		{
 			ptr++;
 			return *this;
 		}
 
 		// Operatore di iterazione post-incremento
-		iterator operator++(int dummy) {
+		iterator operator++(int dummy)
+		{
 			iterator tmp(*this);
 			++(*this);
 			return tmp;
 		}
 
 		// Uguaglianza
-		bool operator==(const iterator &other) const {
+		bool operator==(const iterator &other) const
+		{
 			return ptr == other.ptr;
 		}
 
 		// Diversita'
-		bool operator!=(const iterator &other) const {
+		bool operator!=(const iterator &other) const
+		{
 			return ptr != other.ptr;
 		}
 
-		//friend class const_iterator;
+		friend class const_iterator;
 
 		// Uguaglianza
-		//bool operator==(const const_iterator &other) const {
-			//!!!
-		//}
+		bool operator==(const const_iterator &other) const
+		{
+			return ptr == other.ptr;
+		}
 
 		// Diversita'
-		//bool operator!=(const const_iterator &other) const {
-			//!!!
-		//}
+		bool operator!=(const const_iterator &other) const
+		{
+			return ptr != other.ptr;
+		}
 	private:
 		stack_value* ptr;
 
@@ -629,7 +642,8 @@ public:
 	};
 
 	// Ritorna l'iteratore all'inizio della sequenza
-	iterator begin() {
+	iterator begin()
+	{
 		return iterator(&Items[0]);
 	}
 
@@ -637,8 +651,127 @@ public:
 
 	// Nota: quel +1 é molto sospetto
 
-	iterator end() {
+	iterator end()
+	{
 		return iterator(&Items[top_pos] + 1);
+	}
+
+	class const_iterator {
+	public:
+		typedef std::forward_iterator_tag iterator_category;
+		typedef stack_value               value_type;
+		typedef ptrdiff_t                 difference_type;
+		typedef const stack_value*        pointer;
+		typedef const stack_value&        reference;
+
+		// Costruttore di default
+		const_iterator() : ptr(nullptr) {}
+
+		// Copy constructor
+		const_iterator(const const_iterator &other) : ptr(nullptr)
+		{
+			this->ptr = other.ptr;
+		}
+
+		// Operatore di assegnamento
+		const_iterator& operator=(const const_iterator &other)
+		{
+			this->ptr = other.ptr;
+			return *this;
+		}
+
+		// Distruttore
+		~const_iterator() {}
+
+		// Ritorna il dato riferito dall'iteratore (dereferenziamento)
+		reference operator*() const
+		{
+			return *ptr;
+		}
+
+		// Ritorna il puntatore al dato riferito dall'iteratore
+
+		// Nota: da rivedere
+		pointer operator->() const
+		{
+			return &(*ptr);
+		}
+
+		// Operatore di iterazione pre-incremento
+		const_iterator& operator++()
+		{
+			ptr++;
+			return *this;
+		}
+
+		// Operatore di iterazione post-incremento
+		const_iterator operator++(int dummy)
+		{
+			const_iterator tmp(*this);
+			++(*this);
+			return tmp;
+		}
+
+		// Uguaglianza
+		bool operator==(const const_iterator &other) const
+		{
+			return ptr == other.ptr;
+		}
+
+		// Diversita'
+		bool operator!=(const const_iterator &other) const
+		{
+			return ptr != other.ptr;
+		}
+
+		friend class iterator;
+
+		// Uguaglianza
+		bool operator==(const iterator &other) const {
+			return ptr == other.ptr;
+		}
+
+		// Diversita'
+		bool operator!=(const iterator &other) const {
+			return ptr != other.ptr;
+		}
+
+		// Conversione da un iterator ad un const_iterator
+		const_iterator(const iterator &other) : ptr(nullptr)
+		{
+			this->ptr = other.ptr;
+		}
+
+		// Assegnamento di un iterator ad un const_iterator
+		const_iterator& operator=(const iterator &other)
+		{
+			this->ptr = other.ptr;
+			return *this;
+		}
+
+	private:
+		stack_value* ptr;
+
+		friend class Stack;
+
+		// Costruttore privato di inizializzazione usato dalla classe Stack
+		// per i metodi begin() e end()
+		const_iterator(stack_value* n) : ptr(n) {}
+	};
+
+	// Ritorna l'iteratore all'inizio della sequenza
+	const_iterator begin() const
+	{
+		return const_iterator(&Items[0]);
+	}
+
+	// Ritorna l'iteratore alla fine della sequenza
+
+	// Nota: quel +1 é molto sospetto
+
+	const_iterator end() const
+	{
+		return const_iterator(&Items[top_pos] + 1);
 	}
 };
 

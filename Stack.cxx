@@ -208,17 +208,29 @@ void test_for_loading_through_iterators()
 void test_for_iterators()
 {
 	/* Iteratori della classe */
-	Stack a(5);
+	Stack a(6);
 	a.push(85);
 	a.push(86);
 	a.push(87);
 	a.push(88);
 	a.push(89);
+
 	Stack::iterator itb = a.begin();
+	*itb = 0;
 	Stack::iterator ite = a.end();
 	while (itb != ite) {
 		std::cout << *itb << std::endl;
 		itb++;
+	}
+
+	std::cout << std::endl;
+
+	Stack::const_iterator c_itb = a.begin();
+	// *c_itb = 1;  Non é possibile!
+	Stack::const_iterator c_ite = a.end();
+	while (c_itb != c_ite) {
+		std::cout << *c_itb << std::endl;
+		c_itb++;
 	}
 }
 
