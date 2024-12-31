@@ -51,12 +51,15 @@ distance(I start, I end)
 	statico di dimensione fissata
 */
 class Stack {
+public:
+	typedef int stack_value;
+	class iterator;
+	class const_iterator;
+private:	
 	friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
 	template <typename F>
 	friend void transform(const Stack& stack, F functor);
 
-	typedef int stack_value;
-private:
 	stack_value* Items;        // puntatore all'array statico
 	int top_pos;               // posizione della cima dello stack
 	unsigned int maximum_size; // dimensione (massima) dello stack
@@ -548,8 +551,6 @@ public:
 		return S;
 	}
 
-	class const_iterator;
-
 	class iterator {
 	public:
 		typedef std::forward_iterator_tag iterator_category;
@@ -557,7 +558,15 @@ public:
 		typedef ptrdiff_t                 difference_type;
 		typedef stack_value*              pointer;
 		typedef stack_value&              reference;
+	private:
+		stack_value* ptr;
+		friend class Stack;
+		friend class const_iterator;
 
+		// Costruttore privato di inizializzazione usato dalla
+		// classe Stack per i metodi begin() e end()
+		iterator(stack_value* n) : ptr(n) {}
+	public:
 		// Costruttore di default
 		iterator() : ptr(nullptr) {}
 
@@ -606,55 +615,30 @@ public:
 			return tmp;
 		}
 
-		// Uguaglianza
+		// Uguaglianza fra due iterator
 		bool operator==(const iterator &other) const
 		{
 			return ptr == other.ptr;
 		}
 
-		// Diversita'
-		bool operator!=(const iterator &other) const
-		{
-			return ptr != other.ptr;
-		}
-
-		friend class const_iterator;
-
-		// Uguaglianza
+		// Uguaglianza fra un iterator ed un const_iterator
 		bool operator==(const const_iterator &other) const
 		{
 			return ptr == other.ptr;
 		}
 
-		// Diversita'
+		// Diversitá fra due iterator
+		bool operator!=(const iterator &other) const
+		{
+			return ptr != other.ptr;
+		}
+
+		// Diversitá fra un iterator ed un const_iterator
 		bool operator!=(const const_iterator &other) const
 		{
 			return ptr != other.ptr;
 		}
-	private:
-		stack_value* ptr;
-
-		friend class Stack;
-
-		// Costruttore privato di inizializzazione usato dalla classe Stack
-		// per i metodi begin() e end()
-		iterator(stack_value* n) : ptr(n) {}
 	};
-
-	// Ritorna l'iteratore all'inizio della sequenza
-	iterator begin()
-	{
-		return iterator(&Items[0]);
-	}
-
-	// Ritorna l'iteratore alla fine della sequenza
-
-	// Nota: quel +1 é molto sospetto
-
-	iterator end()
-	{
-		return iterator(&Items[top_pos] + 1);
-	}
 
 	class const_iterator {
 	public:
@@ -663,7 +647,15 @@ public:
 		typedef ptrdiff_t                 difference_type;
 		typedef const stack_value*        pointer;
 		typedef const stack_value&        reference;
+	private:
+		stack_value* ptr;
+		friend class Stack;
+		friend class iterator;
 
+		// Costruttore privato di inizializzazione usato dalla 
+		// classe Stack per i metodi begin() e end()
+		const_iterator(stack_value* n) : ptr(n) {}
+	public:
 		// Costruttore di default
 		const_iterator() : ptr(nullptr) {}
 
@@ -712,31 +704,29 @@ public:
 			return tmp;
 		}
 
-		// Uguaglianza
+		// Uguaglianza fra due const_iterator
 		bool operator==(const const_iterator &other) const
 		{
 			return ptr == other.ptr;
 		}
 
-		// Diversita'
+		// Uguaglianza fra un const_iterator ed un iterator
+		bool operator==(const iterator &other) const {
+			return ptr == other.ptr;
+		}
+
+		// Diversitá fra due const_iterator
 		bool operator!=(const const_iterator &other) const
 		{
 			return ptr != other.ptr;
 		}
 
-		friend class iterator;
-
-		// Uguaglianza
-		bool operator==(const iterator &other) const {
-			return ptr == other.ptr;
-		}
-
-		// Diversita'
+		// Diversitá fra un const_iterator ed un iterator
 		bool operator!=(const iterator &other) const {
 			return ptr != other.ptr;
 		}
 
-		// Conversione da un iterator ad un const_iterator
+		// Conversione da iterator a const_iterator
 		const_iterator(const iterator &other) : ptr(nullptr)
 		{
 			this->ptr = other.ptr;
@@ -748,18 +738,14 @@ public:
 			this->ptr = other.ptr;
 			return *this;
 		}
-
-	private:
-		stack_value* ptr;
-
-		friend class Stack;
-
-		// Costruttore privato di inizializzazione usato dalla classe Stack
-		// per i metodi begin() e end()
-		const_iterator(stack_value* n) : ptr(n) {}
 	};
 
 	// Ritorna l'iteratore all'inizio della sequenza
+	iterator begin()
+	{
+		return iterator(&Items[0]);
+	}
+
 	const_iterator begin() const
 	{
 		return const_iterator(&Items[0]);
@@ -768,6 +754,11 @@ public:
 	// Ritorna l'iteratore alla fine della sequenza
 
 	// Nota: quel +1 é molto sospetto
+
+	iterator end()
+	{
+		return iterator(&Items[top_pos] + 1);
+	}
 
 	const_iterator end() const
 	{
