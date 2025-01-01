@@ -21,7 +21,6 @@ void test_for_full_stack()
 	/* Stack pieno */
 	Stack a(1, 1);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
-
 	try {
 		a.push(7);
 	}
@@ -69,14 +68,6 @@ void test_for_clear()
 	Stack a(5, 100);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 	a.clear();
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
-}
-
-void test_for_fill()
-{
-	/* Carico di uno stack con il medesimo valore mediante fill() */
-	Stack a(5);
-	a.fill(5);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 }
 
@@ -244,8 +235,6 @@ int main()
 	std::cout << std::endl;
 	test_for_clear();
 	std::cout << std::endl;
-	test_for_fill();
-	std::cout << std::endl;
 	test_for_copy_constructor();
 	std::cout << std::endl;
 	test_for_assignment();
@@ -260,6 +249,5 @@ int main()
 
 	/* Allocazione impossibile */
 	// Stack z(3567587328);
-
 	return 0;
 }

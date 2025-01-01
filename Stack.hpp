@@ -56,7 +56,7 @@ public:
 	class iterator;
 	class const_iterator;
 private:
-	stack_value* Items;        // puntatore all'array statico
+	stack_value* Items;        // array di elementi
 	int top_pos;               // posizione della cima dello stack
 	unsigned int maximum_size; // dimensione (massima) dello stack
 public:
@@ -89,8 +89,6 @@ public:
 		massima della dimensione data e array statico di lunghezza
 		pari alla dimensione data
 
-		Nota: l'array non viene riempito con alcun valore di default
-
 		Nota: viene dichiarato explicit per evitare che il compilatore
 		lo intenda come un cast implicito
 
@@ -114,6 +112,10 @@ public:
 		}
 
 		maximum_size = size;
+
+		for (unsigned int i = 0; i < maximum_size; ++i) {
+			Items[i] = stack_value();
+		}
 
 		#ifndef NDEBUG
 		std::cout << "Stack::Stack(unsigned int)" << std::endl;
@@ -149,12 +151,12 @@ public:
 			throw;
 		}
 
-		for (unsigned int i = 0; i < size; ++i) {
-			Items[i] = value;
-			top_pos++;
-		}
-
 		maximum_size = size;
+		top_pos = maximum_size - 1;
+
+		for (unsigned int i = 0; i < maximum_size; ++i) {
+			Items[i] = value;
+		}
 
 		#ifndef NDEBUG
 		std::cout << "Stack::Stack(unsigned int, stack_value)" << std::endl;
@@ -217,6 +219,8 @@ public:
 	Stack(const Stack& other)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
+		clear();
+
 		try {
 			Items = new stack_value[other.maximum_size];
 		}
@@ -226,11 +230,11 @@ public:
 		}
 
 		for (unsigned int i = 0; i < other.top_pos + 1; ++i) {
-			Items[i] = other.Items[i];
+			this->Items[i] = other.Items[i];
 		}
 
-		top_pos = other.top_pos;
-		maximum_size = other.maximum_size;
+		this->top_pos = other.top_pos;
+		this->maximum_size = other.maximum_size;
 
 		#ifndef NDEBUG
 		std::cout << "Stack::Stack(const Stack&)" << std::endl;
@@ -248,10 +252,7 @@ public:
 	*/
 	~Stack()
 	{
-		delete[] Items;
-		Items = nullptr;
-		maximum_size = 0;
-		top_pos = -1;
+		clear();
 
 		#ifndef NDEBUG
 		std::cout << "Stack::~Stack()" << std::endl;
@@ -300,6 +301,7 @@ public:
 			throw Minimum_size_reached();
 		} else {
 			stack_value old_top = Items[top_pos];
+			Items[top_pos] = stack_value();
 			top_pos--;
 			return old_top;
 		}
@@ -336,11 +338,7 @@ public:
 	*/
 	bool stack_empty() const
 	{
-		if (top_pos == -1) {
-			return true;
-		} else {
-			return false;
-		}
+		return (top_pos == -1);
 	}
 
 	/**
@@ -379,42 +377,6 @@ public:
 	}
 
 	/**
-		@brief Fill
-
-		Metodo che riempie tutte le celle dello stack con il valore dato
-
-		@param value il valore con cui riempire lo stack
-
-		@post Items[i] == value
-	*/
-	void fill(const stack_value& value)
-	{
-		stack_value* tmp = nullptr;
-
-		try {
-			tmp = new stack_value[maximum_size];
-		}
-		catch (std::bad_alloc) {
-			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
-			throw;
-		}
-
-		for (unsigned int i = 0; i < maximum_size; ++i) {
-			tmp[i] = value;
-		}
-
-		std::swap(Items, tmp);
-		delete[] tmp;
-		tmp = nullptr;
-
-		top_pos = maximum_size - 1;
-
-		#ifndef NDEBUG
-		std::cout << "Stack::fill(const stack_value&)" << std::endl;
-		#endif
-	}
-
-	/**
 		@brief Load
 
 		Metodo che prende in input una coppia di iteratori, uno che
@@ -435,10 +397,7 @@ public:
 	template <typename I>
 	void load(I it_s, I it_e)
 	{
-		if (Items != nullptr) {
-			delete[] Items;
-			Items = nullptr;
-		}
+		clear();
 
 		maximum_size = distance(it_s, it_e);
 		top_pos = maximum_size - 1;
@@ -461,14 +420,15 @@ public:
 
 		Metodo che svuota tutte le celle dello stack
 
-		Nota: non é necessario modificare nessun valore
-		dello stack, é sufficiente porre la posizione 
-		a -1. I valori nelle celle sono perduti comunque
-
 		@post top_pos == -1
 	*/
 	void clear()
 	{
+		if (Items != nullptr) {
+			delete[] Items;
+			Items = nullptr;
+		}
+
 		top_pos = -1;
 	}
 
@@ -591,10 +551,9 @@ public:
 
 		// Ritorna il puntatore al dato riferito dall'iteratore
 
-		// Nota: da rivedere
 		pointer operator->() const
 		{
-			return &(*ptr);
+			return ptr;
 		}
 
 		// Operatore di iterazione pre-incremento
@@ -645,13 +604,13 @@ public:
 		typedef const stack_value*        pointer;
 		typedef const stack_value&        reference;
 	private:
-		stack_value* ptr;
+		const stack_value* ptr;
 		friend class Stack;
 		friend class iterator;
 
 		// Costruttore privato di inizializzazione usato dalla 
 		// classe Stack per i metodi begin() e end()
-		const_iterator(stack_value* n) : ptr(n) {}
+		const_iterator(const stack_value* n) : ptr(n) {}
 	public:
 		// Costruttore di default
 		const_iterator() : ptr(nullptr) {}
@@ -680,10 +639,9 @@ public:
 
 		// Ritorna il puntatore al dato riferito dall'iteratore
 
-		// Nota: da rivedere
 		pointer operator->() const
 		{
-			return &(*ptr);
+			return ptr;
 		}
 
 		// Operatore di iterazione pre-incremento
@@ -740,26 +698,42 @@ public:
 	// Ritorna l'iteratore all'inizio della sequenza
 	iterator begin()
 	{
-		return iterator(&Items[0]);
+		if (!stack_empty()) {
+			return iterator(&Items[0]);
+		} else {
+			return iterator(nullptr);
+		}
 	}
 
 	const_iterator begin() const
 	{
+		if (!stack_empty()) {
 		return const_iterator(&Items[0]);
+		} else {
+			return const_iterator(nullptr);
+		}
 	}
 
 	// Ritorna l'iteratore alla fine della sequenza
 
-	// Nota: quel +1 é molto sospetto
+	// Nota: sommare 1 NON é safe
 
 	iterator end()
 	{
+		if (!stack_empty()) {
 		return iterator(&Items[top_pos] + 1);
+		} else {
+			return iterator(nullptr);
+		}
 	}
 
 	const_iterator end() const
 	{
+		if (!stack_empty()) {
 		return const_iterator(&Items[top_pos] + 1);
+		} else {
+			return const_iterator(nullptr);
+		}
 	}
 };
 
