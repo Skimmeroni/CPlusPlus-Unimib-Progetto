@@ -17,46 +17,19 @@ struct Maximum_size_reached {};
 struct Minimum_size_reached {};
 
 /**
-	@brief Distance
-
-	Funzione di supporto che calcola la distanza fra due iteratori
-	generici (dello stesso tipo). Versione semplificata della omonima
-	funzione presente nella libreria standard
-
-	Nota: nel caso dei puntatori, viene saltato un valore
-
-	@param start l'iteratore di prima posizione
-	@param end l'iteratore di ultima posizione
-
-	@return la distanza fra i due iteratori
-*/
-
-template<class I>
-typename std::iterator_traits<I>::difference_type
-distance(I start, I end)
-{
-	typename std::iterator_traits<I>::difference_type distance = 0;
-	while (start != end) {
-		distance++;
-		start++;
-	}
-
-	return distance;
-}
-
-/**
 	@brief Classe Stack
 
 	Classe che implementa la struttura dati stack, utilizzando un array
 	statico di dimensione fissata
 */
+
+template<typename T>
 class Stack {
 public:
-	typedef int stack_value;
 	class iterator;
 	class const_iterator;
 private:
-	stack_value* Items;        // array di elementi
+	T* Items;                  // array di elementi
 	int top_pos;               // posizione della cima dello stack
 	unsigned int maximum_size; // dimensione (massima) dello stack
 public:
@@ -74,6 +47,7 @@ public:
 		@post maximum_size == 0
 		@post Items = nullptr
 	*/
+
 	Stack()
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
@@ -100,11 +74,12 @@ public:
 
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
 	*/
+
 	explicit Stack(const unsigned int& size)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
-			Items = new stack_value[size];
+			Items = new T[size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
@@ -114,7 +89,7 @@ public:
 		maximum_size = size;
 
 		for (unsigned int i = 0; i < maximum_size; ++i) {
-			Items[i] = stack_value();
+			Items[i] = T();
 		}
 
 		#ifndef NDEBUG
@@ -125,53 +100,9 @@ public:
 	/**
 		@brief Costruttore secondario
 
-		Costruttore secondario, che inizializza lo stack con dimensione
-		massima della dimensione data, array statico di lunghezza
-		pari alla dimensione data e posizione della cima pari alla
-		dimensione data. Tutte le celle dello stack vengono riempite
-		con il valore dato.
-
-		@param size la dimensione massima dello stack
-		@param value il valore con cui riempire lo stack
-
-		@post top_pos == size
-		@post maximum_size == size
-		@post Items != nullptr
-
-		@throw std::bad_alloc se l'allocazione della memoria fallisce
-	*/
-	Stack(const unsigned int& size, const stack_value& value)
-	: top_pos(-1), maximum_size(0), Items(nullptr)
-	{
-		try {
-			Items = new stack_value[size];
-		}
-		catch (std::bad_alloc) {
-			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
-			throw;
-		}
-
-		maximum_size = size;
-		top_pos = maximum_size - 1;
-
-		for (unsigned int i = 0; i < maximum_size; ++i) {
-			Items[i] = value;
-		}
-
-		#ifndef NDEBUG
-		std::cout << "Stack::Stack(unsigned int, stack_value)" << std::endl;
-		#endif
-	}
-
-	/**
-		@brief Costruttore secondario
-
 		Costruttore secondario, che prende in input una coppia di iteratori,
 		uno che punta all'inizio di una sequenza e uno che punta alla fine
 		di una sequenza, e che riempie uno stack con i valori nel mezzo
-
-		Nota: non ancora terminato. Il puntatore hardcoded andrebbe
-		sostituito con un iteratore templato.
 
 		@param it_s un iteratore che punta all'inizio della sequenza
 		@param it_e un iteratore che punta alla fine della sequenza
@@ -182,24 +113,11 @@ public:
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
 	*/
 
-	// template <typename I>
-	Stack(stack_value* it_s, stack_value* it_e)
+	template <typename I>
+	Stack(I it_s, I it_e)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
-		maximum_size = distance(it_s, it_e);
-		top_pos = maximum_size - 1;
-
-		try {
-			Items = new stack_value[maximum_size];
-		}
-		catch (std::bad_alloc) {
-			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
-			throw;
-		}
-
-		for (unsigned int i = 0; it_s != it_e; ++i, it_s++) {
-			Items[i] = *it_s;
-		}
+		load<I>(it_s, it_e);
 	}
 
 	/**
@@ -216,13 +134,14 @@ public:
 
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
 	*/
+
 	Stack(const Stack& other)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		clear();
 
 		try {
-			Items = new stack_value[other.maximum_size];
+			Items = new T[other.maximum_size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
@@ -250,6 +169,7 @@ public:
 		@post maximum_size == 0
 		@post Items == nullptr
 	*/
+
 	~Stack()
 	{
 		clear();
@@ -272,7 +192,8 @@ public:
 
 		@throw Maximum_size_reached se lo stack é pieno
 	*/
-	void push(const stack_value& value)
+
+	void push(const T& value)
 	{
 		if (maximum_size == top_pos + 1) {
 			throw Maximum_size_reached();
@@ -295,13 +216,14 @@ public:
 
 		@throw Minimum_size_reached se lo stack é vuoto
 	*/
-	stack_value pop()
+
+	T pop()
 	{
 		if (top_pos == -1) {
 			throw Minimum_size_reached();
 		} else {
-			stack_value old_top = Items[top_pos];
-			Items[top_pos] = stack_value();
+			T old_top = Items[top_pos];
+			Items[top_pos] = T();
 			top_pos--;
 			return old_top;
 		}
@@ -320,7 +242,8 @@ public:
 
 		@throw Minimum_size_reached se lo stack é vuoto
 	*/
-	stack_value peek() const
+
+	T peek() const
 	{
 		if (top_pos == -1) {
 			throw Minimum_size_reached();
@@ -336,6 +259,7 @@ public:
 
 		@return true se é vuoto, false se non lo é
 	*/
+
 	bool stack_empty() const
 	{
 		return (top_pos == -1);
@@ -354,6 +278,7 @@ public:
 
 		@return la dimensione massima dello stack
 	*/
+
 	unsigned int size() const
 	{
 		return maximum_size;
@@ -371,6 +296,7 @@ public:
 
 		@return la posizione della cima dello stack
 	*/
+
 	int head() const
 	{
 		return top_pos;
@@ -399,11 +325,17 @@ public:
 	{
 		clear();
 
-		maximum_size = distance(it_s, it_e);
+		unsigned int maximum_size = 0;
+		I temp = it_s;
+		while (temp != it_e) {
+			maximum_size++;
+			temp++;
+		}
+
 		top_pos = maximum_size - 1;
 
 		try {
-			Items = new stack_value[maximum_size];
+			Items = new T[maximum_size];
 		}
 		catch (std::bad_alloc) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
@@ -411,7 +343,7 @@ public:
 		}
 
 		for (unsigned int i = 0; it_s != it_e; ++i, it_s++) {
-			Items[i] = *it_s;
+			Items[i] = static_cast<T>(*it_s);
 		}
 	}
 
@@ -422,6 +354,7 @@ public:
 
 		@post top_pos == -1
 	*/
+
 	void clear()
 	{
 		if (Items != nullptr) {
@@ -445,6 +378,7 @@ public:
 		@post this->top_pos == other.top_pos
 		@post this->maximum_size == other.maximum_size
 	*/
+
 	void swap(Stack& other)
 	{
 		std::swap(this->Items, other.Items);
@@ -469,6 +403,7 @@ public:
 
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
 	*/
+
 	Stack& operator=(const Stack& other)
 	{
 		if (this != &other) {
@@ -494,6 +429,7 @@ public:
 
 		@return uno stack opportunamente costruito
 	*/
+
 	template <typename P>
 	Stack filter_out(P predicate)
 	{
@@ -511,18 +447,18 @@ public:
 	class iterator {
 	public:
 		typedef std::forward_iterator_tag iterator_category;
-		typedef stack_value               value_type;
+		typedef T                         value_type;
 		typedef ptrdiff_t                 difference_type;
-		typedef stack_value*              pointer;
-		typedef stack_value&              reference;
+		typedef T*                        pointer;
+		typedef T&                        reference;
 	private:
-		stack_value* ptr;
+		T* ptr;
 		friend class Stack;
 		friend class const_iterator;
 
 		// Costruttore privato di inizializzazione usato dalla
 		// classe Stack per i metodi begin() e end()
-		iterator(stack_value* n) : ptr(n) {}
+		iterator(T* n) : ptr(n) {}
 	public:
 		// Costruttore di default
 		iterator() : ptr(nullptr) {}
@@ -550,7 +486,6 @@ public:
 		}
 
 		// Ritorna il puntatore al dato riferito dall'iteratore
-
 		pointer operator->() const
 		{
 			return ptr;
@@ -599,18 +534,18 @@ public:
 	class const_iterator {
 	public:
 		typedef std::forward_iterator_tag iterator_category;
-		typedef stack_value               value_type;
+		typedef T                         value_type;
 		typedef ptrdiff_t                 difference_type;
-		typedef const stack_value*        pointer;
-		typedef const stack_value&        reference;
+		typedef const T*                  pointer;
+		typedef const T&                  reference;
 	private:
-		const stack_value* ptr;
+		const T* ptr;
 		friend class Stack;
 		friend class iterator;
 
 		// Costruttore privato di inizializzazione usato dalla 
 		// classe Stack per i metodi begin() e end()
-		const_iterator(const stack_value* n) : ptr(n) {}
+		const_iterator(const T* n) : ptr(n) {}
 	public:
 		// Costruttore di default
 		const_iterator() : ptr(nullptr) {}
@@ -638,7 +573,6 @@ public:
 		}
 
 		// Ritorna il puntatore al dato riferito dall'iteratore
-
 		pointer operator->() const
 		{
 			return ptr;
@@ -715,9 +649,7 @@ public:
 	}
 
 	// Ritorna l'iteratore alla fine della sequenza
-
 	// Nota: sommare 1 NON é safe
-
 	iterator end()
 	{
 		if (!stack_empty()) {
@@ -750,10 +682,12 @@ public:
 
 	@post os == os << stack.Items
 */
-std::ostream& operator<<(std::ostream& os, const Stack& stack)
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const Stack<T>& stack)
 {
-	Stack::const_iterator start = stack.begin();
-	Stack::const_iterator end = stack.end();
+	typename Stack<T>::const_iterator start = stack.begin();
+	typename Stack<T>::const_iterator end = stack.end();
 
 	os << "{ ";
 	while (start != end) {
@@ -780,11 +714,12 @@ std::ostream& operator<<(std::ostream& os, const Stack& stack)
 
 	@post stack.Items[i] = functor(stack.Items[i])
 */
-template <typename F>
-void transform(Stack& stack, F functor)
+
+template <typename T, typename F>
+void transform(Stack<T>& stack, F functor)
 {
-	Stack::iterator start = stack.begin();
-	Stack::iterator end = stack.end();
+	typename Stack<T>::iterator start = stack.begin();
+	typename Stack<T>::iterator end = stack.end();
 
 	while (start != end) {
 		*start = functor(*start);
