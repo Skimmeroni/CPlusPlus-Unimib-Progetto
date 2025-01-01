@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <array>
+#include <string>
 
 void test_for_empty_stack()
 {
@@ -67,11 +68,14 @@ void test_for_clear()
 {
 	/* Carico di uno stack con il medesimo valore mediante costruttore */
 	Stack<int> a(5);
-	a.push(100);
-	a.push(100);
-	a.push(100);
-	a.push(100);
-	a.push(100);
+	for (unsigned int i = 0; i < a.size(); ++i) {
+		try {
+			a.push(100);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 	a.clear();
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
@@ -81,15 +85,14 @@ void test_for_copy_constructor()
 {
 	/* Costruttore di copia */
 	Stack<int> a(9);
-	a.push(81);
-	a.push(81);
-	a.push(81);
-	a.push(81);
-	a.push(81);
-	a.push(81);
-	a.push(81);
-	a.push(81);
-	a.push(81);
+	for (unsigned int i = 0; i < a.size(); ++i) {
+		try {
+			a.push(81);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
 	Stack<int> b = a;
 	std::cout << b << "Dimensione: " << b.size() << std::endl;
 }
@@ -98,18 +101,14 @@ void test_for_assignment()
 {
 	/* Assegnamento */
 	Stack<int> a(12);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
-	a.push(0);
+	for (unsigned int i = 0; i < a.size(); ++i) {
+		try {
+			a.push(0);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
 	Stack<int> b;
 	b = a;
 	std::cout << b << "Dimensione: " << b.size() << std::endl;
@@ -176,11 +175,14 @@ void test_for_transform()
 	};
 
 	Stack<int> a(5);
-	a.push(100);
-	a.push(100);
-	a.push(100);
-	a.push(100);
-	a.push(100);
+	for (unsigned int i = 0; i < a.size(); ++i) {
+		try {
+			a.push(100);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 	Modifier1 mod1;
 	transform<int, Modifier1>(a, mod1);
@@ -232,12 +234,14 @@ void test_for_iterators()
 {
 	/* Iteratori della classe */
 	Stack<int> a(6);
-	a.push(85);
-	a.push(86);
-	a.push(87);
-	a.push(88);
-	a.push(89);
-
+	for (unsigned int i = 0; i < a.size(); ++i) {
+		try {
+			a.push(85 + i);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
 	Stack<int>::iterator itb = a.begin();
 	*itb = 0;
 	Stack<int>::iterator ite = a.end();
@@ -255,6 +259,44 @@ void test_for_iterators()
 		std::cout << *c_itb << std::endl;
 		c_itb++;
 	}
+}
+
+void test_for_fancy_types()
+{
+	/* Datatype particolarmente convoluti */
+	enum Color {Red, Green, Blue};
+
+	struct Comparison {
+		bool operator()(int n) const {
+			return n > 0;
+		}
+	};
+
+	struct Person {
+		char* Name;
+		unsigned int age;
+		bool is_married;
+		Person* best_friend;
+	};
+
+	Stack<double> a1(10);
+	Stack<long double> a2(10);
+	Stack<long long int> a3(10);
+	Stack<unsigned long int> a4(10);
+	Stack<unsigned char> a5(10);
+	Stack<int*> a6(10);
+	Stack<int**> a7(10);
+	Stack<bool***> a8(10);
+	Stack<char> a9(10);
+	Stack<char*> a10(10);
+	Stack<std::string> a11(10);
+	Stack<std::array<int, 5>> a12(10);
+	Stack<std::array<std::array<int, 5>, 5>> a13(10);
+	Stack<Stack<int>> a14(10);
+	Stack<std::array<Stack<std::array<int, 5>>, 5>> a15(10);
+	Stack<Color> a16(10);
+	Stack<Comparison> a17(10);
+	Stack<Person> a18(10);
 }
 
 int main()
@@ -278,6 +320,8 @@ int main()
 	test_for_loading_through_iterators();
 	std::cout << std::endl;
 	test_for_iterators();
+	std::cout << std::endl;
+	test_for_fancy_types();
 
 	/* Allocazione impossibile */
 	// Stack<int> z(3567587328);
