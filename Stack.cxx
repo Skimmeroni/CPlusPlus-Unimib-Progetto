@@ -34,8 +34,9 @@ void test_for_full_stack()
 void test_for_push_pop()
 {
 	/* Carico e scarico di uno stack */
-	Stack<int> a(10);
-	for (int i = 0; i < a.size(); ++i) {
+	Stack<unsigned int> a(10);
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(i);
 		}
@@ -53,7 +54,8 @@ void test_for_push_pop()
 		}
 	}
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
-	for (unsigned int i = 0; i < a.size() - 3; ++i) {
+	s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s - 3; ++i) {
 		try {
 			a.pop();
 		}
@@ -68,7 +70,8 @@ void test_for_clear()
 {
 	/* Carico di uno stack con il medesimo valore mediante costruttore */
 	Stack<int> a(5);
-	for (unsigned int i = 0; i < a.size(); ++i) {
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(100);
 		}
@@ -85,7 +88,8 @@ void test_for_copy_constructor()
 {
 	/* Costruttore di copia */
 	Stack<int> a(9);
-	for (unsigned int i = 0; i < a.size(); ++i) {
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(81);
 		}
@@ -101,7 +105,8 @@ void test_for_assignment()
 {
 	/* Assegnamento */
 	Stack<int> a(12);
-	for (unsigned int i = 0; i < a.size(); ++i) {
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(0);
 		}
@@ -118,25 +123,26 @@ void test_for_filter_out()
 {
 	/* Filtering */
 	struct Comparison1 {
-		bool operator()(int n) const {
+		bool operator()(unsigned int n) const {
 			return n > 3;
 		}
 	};
 
 	struct Comparison2 {
-		bool operator()(int n) const {
+		bool operator()(unsigned int n) const {
 			return (n % 2) == 0;
 		}
 	};
 
 	struct Comparison3 {
-		bool operator()(int n) const {
+		bool operator()(unsigned int n) const {
 			return n > 100;
 		}
 	};
 
-	Stack<int> a(10);
-	for (int i = 0; i < a.size(); ++i) {
+	Stack<unsigned int> a(10);
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(i);
 		}
@@ -147,15 +153,15 @@ void test_for_filter_out()
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 
 	Comparison1 comp1;
-	Stack<int> b = a.filter_out<Comparison1>(comp1);
+	Stack<unsigned int> b = a.filter_out<Comparison1>(comp1);
 	std::cout << b << "Dimensione: " << b.size() << std::endl;
 
 	Comparison2 comp2;
-	Stack<int> c = a.filter_out<Comparison2>(comp2);
+	Stack<unsigned int> c = a.filter_out<Comparison2>(comp2);
 	std::cout << c << "Dimensione: " << c.size() << std::endl;
 
 	Comparison3 comp3;
-	Stack<int> d = a.filter_out<Comparison3>(comp3);
+	Stack<unsigned int> d = a.filter_out<Comparison3>(comp3);
 	std::cout << d << "Dimensione: " << d.size() << std::endl;
 }
 
@@ -175,7 +181,8 @@ void test_for_transform()
 	};
 
 	Stack<int> a(5);
-	for (unsigned int i = 0; i < a.size(); ++i) {
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(100);
 		}
@@ -234,7 +241,8 @@ void test_for_iterators()
 {
 	/* Iteratori della classe */
 	Stack<int> a(6);
-	for (unsigned int i = 0; i < a.size(); ++i) {
+	unsigned int s = static_cast<unsigned int>(a.size());
+	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(85 + i);
 		}
@@ -297,7 +305,16 @@ void test_for_fancy_types()
 	Stack<Color> a16(10);
 	Stack<Comparison> a17(10);
 	Stack<Person> a18(10);
-}
+
+	std::array<std::array<int, 3>, 3> a = std::array<std::array<int, 3>, 3>();
+
+	auto it1 = &a[0];
+	auto it2 = &a[2];
+	Stack<std::array<int, 3>> b(it1, it2);
+	b.pop();
+	b.push(std::array<int, 3>());
+	// std::cout << b << "Dimensione: " << b.size() << std::endl;
+ }
 
 int main()
 {

@@ -26,12 +26,13 @@ struct Minimum_size_reached {};
 template<typename T>
 class Stack {
 public:
+	typedef int item_type;
 	class iterator;
 	class const_iterator;
 private:
-	T* Items;                  // array di elementi
-	int top_pos;               // posizione della cima dello stack
-	unsigned int maximum_size; // dimensione (massima) dello stack
+	item_type top_pos;       // posizione della cima dello stack
+	item_type maximum_size;  // dimensione (massima) dello stack
+	T* Items;                // array di elementi
 public:
 	/**
 		@brief Costruttore di default
@@ -75,25 +76,25 @@ public:
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
 	*/
 
-	explicit Stack(const unsigned int& size)
+	explicit Stack(const item_type& size)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
 		try {
 			Items = new T[size];
 		}
-		catch (std::bad_alloc) {
+		catch (std::bad_alloc const&) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
 			throw;
 		}
 
 		maximum_size = size;
 
-		for (unsigned int i = 0; i < maximum_size; ++i) {
+		for (item_type i = 0; i < maximum_size; ++i) {
 			Items[i] = T();
 		}
 
 		#ifndef NDEBUG
-		std::cout << "Stack::Stack(unsigned int)" << std::endl;
+		std::cout << "Stack::Stack(item_type)" << std::endl;
 		#endif
 	}
 
@@ -143,12 +144,12 @@ public:
 		try {
 			Items = new T[other.maximum_size];
 		}
-		catch (std::bad_alloc) {
+		catch (std::bad_alloc const&) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
 			throw;
 		}
 
-		for (unsigned int i = 0; i < other.top_pos + 1; ++i) {
+		for (item_type i = 0; i < other.top_pos + 1; ++i) {
 			this->Items[i] = other.Items[i];
 		}
 
@@ -279,7 +280,7 @@ public:
 		@return la dimensione massima dello stack
 	*/
 
-	unsigned int size() const
+	item_type size() const
 	{
 		return maximum_size;
 	}
@@ -325,7 +326,7 @@ public:
 	{
 		clear();
 
-		unsigned int maximum_size = 0;
+		item_type maximum_size = 0;
 		I temp = it_s;
 		while (temp != it_e) {
 			maximum_size++;
@@ -337,12 +338,12 @@ public:
 		try {
 			Items = new T[maximum_size];
 		}
-		catch (std::bad_alloc) {
+		catch (std::bad_alloc const&) {
 			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
 			throw;
 		}
 
-		for (unsigned int i = 0; it_s != it_e; ++i, it_s++) {
+		for (item_type i = 0; it_s != it_e; ++i, it_s++) {
 			Items[i] = static_cast<T>(*it_s);
 		}
 	}
@@ -435,7 +436,7 @@ public:
 	{
 		Stack S(this->maximum_size);
 
-		for (unsigned int i = 0; i <= this->top_pos; ++i) {
+		for (item_type i = 0; i <= this->top_pos; ++i) {
 			if (predicate(this->Items[i]) == true) {
 				S.push(Items[i]);
 			}
@@ -695,7 +696,7 @@ std::ostream& operator<<(std::ostream& os, const Stack<T>& stack)
 		start++;
 	}
 
-	for (unsigned int i = stack.head() + 1; i < stack.size(); ++i) {
+	for (typename Stack<T>::item_type i = stack.head() + 1; i < stack.size(); ++i) {
 		os << "[] ";
 	}
 	os << "}" << std::endl;
