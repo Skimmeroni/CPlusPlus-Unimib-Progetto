@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -pedantic -std=c++11 -fsanitize=address -Wall -g
-LDFLAGS = -pedantic -std=c++11 -fsanitize=address -Wl
+CXXFLAGS = -ggdb -pedantic -std=c++11 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -Wall -g
+LDFLAGS = -ggdb -pedantic -std=c++11 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -Wl
 
 main.exe: Stack.o
 	$(CXX) $(CXXFLAGS) Stack.o -o main.exe
