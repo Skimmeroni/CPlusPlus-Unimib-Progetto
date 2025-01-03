@@ -12,6 +12,7 @@
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <cassert>
 
 struct Maximum_size_reached {};
 struct Minimum_size_reached {};
@@ -196,6 +197,8 @@ public:
 
 	void push(const T& value)
 	{
+		assert(top_pos < maximum_size);
+
 		if (maximum_size == top_pos + 1) {
 			throw Maximum_size_reached();
 		} else {
@@ -220,6 +223,8 @@ public:
 
 	T pop()
 	{
+		assert(top_pos < maximum_size);
+
 		if (top_pos == -1) {
 			throw Minimum_size_reached();
 		} else {
@@ -246,6 +251,8 @@ public:
 
 	T peek() const
 	{
+		assert(top_pos < maximum_size);
+
 		if (top_pos == -1) {
 			throw Minimum_size_reached();
 		} else {
@@ -263,6 +270,8 @@ public:
 
 	bool stack_empty() const
 	{
+		assert(top_pos < maximum_size);
+
 		return (top_pos == -1);
 	}
 
@@ -282,6 +291,8 @@ public:
 
 	item_type size() const
 	{
+		assert(top_pos < maximum_size);
+
 		return maximum_size;
 	}
 
@@ -298,8 +309,10 @@ public:
 		@return la posizione della cima dello stack
 	*/
 
-	int head() const
+	item_type head() const
 	{
+		assert(top_pos < maximum_size);
+
 		return top_pos;
 	}
 
@@ -324,15 +337,18 @@ public:
 	template <typename I>
 	void load(I it_s, I it_e)
 	{
+		assert(top_pos < maximum_size);
+
 		clear();
 
-		item_type maximum_size = 0;
+		item_type d = 0;
 		I temp = it_s;
 		while (temp != it_e) {
-			maximum_size++;
+			d++;
 			temp++;
 		}
 
+		maximum_size = d;
 		top_pos = maximum_size - 1;
 
 		try {
@@ -358,6 +374,8 @@ public:
 
 	void clear()
 	{
+		assert(top_pos < maximum_size);
+
 		if (Items != nullptr) {
 			delete[] Items;
 			Items = nullptr;
@@ -382,6 +400,8 @@ public:
 
 	void swap(Stack& other)
 	{
+		assert(top_pos < maximum_size);
+
 		std::swap(this->Items, other.Items);
 		std::swap(this->top_pos, other.top_pos);
 		std::swap(this->maximum_size, other.maximum_size);
@@ -407,6 +427,8 @@ public:
 
 	Stack& operator=(const Stack& other)
 	{
+		assert(top_pos < maximum_size);
+
 		if (this != &other) {
 			Stack tmp(other);
 			this->swap(tmp);
@@ -434,6 +456,8 @@ public:
 	template <typename P>
 	Stack filter_out(P predicate)
 	{
+		assert(top_pos < maximum_size);
+
 		Stack S(this->maximum_size);
 
 		for (item_type i = 0; i <= this->top_pos; ++i) {
