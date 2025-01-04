@@ -91,7 +91,14 @@ public:
 		maximum_size = size;
 
 		for (item_type i = 0; i < maximum_size; ++i) {
-			Items[i] = T();
+			try {
+				Items[i] = T();
+			}
+			catch (std::bad_alloc const&) {
+				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+				wipe();
+				throw;
+			}
 		}
 
 		#ifndef NDEBUG
@@ -151,7 +158,14 @@ public:
 		}
 
 		for (item_type i = 0; i < other.top_pos + 1; ++i) {
-			this->Items[i] = other.Items[i];
+			try {
+				this->Items[i] = other.Items[i];
+			}
+			catch (std::bad_alloc const&) {
+				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+				wipe();
+				throw;
+			}
 		}
 
 		this->top_pos = other.top_pos;
@@ -203,7 +217,14 @@ public:
 			throw Maximum_size_reached();
 		} else {
 			top_pos++;
-			Items[top_pos] = value;
+			try {
+				Items[top_pos] = value;
+			}
+			catch (std::bad_alloc const&) {
+				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+				wipe();
+				throw;
+			}
 		}
 	}
 
@@ -225,11 +246,18 @@ public:
 	{
 		assert(top_pos < maximum_size);
 
-		if (top_pos == -1) {
+		if (stack_empty()) {
 			throw Minimum_size_reached();
 		} else {
 			T old_top = Items[top_pos];
-			Items[top_pos] = T();
+			try {
+				Items[top_pos] = T();
+			}
+			catch (std::bad_alloc const&) {
+				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+				wipe();
+				throw;
+			}
 			top_pos--;
 			return old_top;
 		}
@@ -253,7 +281,7 @@ public:
 	{
 		assert(top_pos < maximum_size);
 
-		if (top_pos == -1) {
+		if (stack_empty()) {
 			throw Minimum_size_reached();
 		} else {
 			return Items[top_pos];
@@ -360,7 +388,14 @@ public:
 		}
 
 		for (item_type i = 0; it_s != it_e; ++i, it_s++) {
-			Items[i] = static_cast<T>(*it_s);
+			try {
+				Items[i] = static_cast<T>(*it_s);
+			}
+			catch (std::bad_alloc const&) {
+				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+				wipe();
+				throw;
+			}
 		}
 	}
 
@@ -403,7 +438,14 @@ public:
 
 		if (Items != nullptr) {
 			for (item_type i = 0; i <= top_pos; ++i) {
-				Items[i] = T();
+				try {
+					Items[i] = T();
+				}
+				catch (std::bad_alloc const&) {
+					std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+					wipe();
+					throw;
+				}
 			}
 		}
 
@@ -773,7 +815,14 @@ void transform(Stack<T>& stack, F functor)
 	typename Stack<T>::iterator end = stack.end();
 
 	while (start != end) {
-		*start = functor(*start);
+		try {
+			*start = functor(*start);
+		}
+		catch (std::bad_alloc const&) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			stack.wipe();
+			throw;
+		}
 		start++;
 	}
 }
