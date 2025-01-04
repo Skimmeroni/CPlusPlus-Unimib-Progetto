@@ -214,13 +214,15 @@ void test_for_loading_through_iterators()
 	std::array<int, 5>::iterator it1 = arr.begin();
 	std::array<int, 5>::iterator it2 = arr.end();
 
-	Stack<int> a;
+	Stack<int> a(5);
 	a.load<std::array<int, 5>::iterator>(it1, it2);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 
+	a.clear();
 	a.load<std::array<int, 5>::iterator>(it1, it1);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 
+	a.clear();
 	a.load<std::array<int, 5>::iterator>(it2, it2);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
 
@@ -230,9 +232,11 @@ void test_for_loading_through_iterators()
 	Stack<int> b(itt1, itt2);
 	std::cout << b << "Dimensione: " << b.size() << std::endl;
 
+	b.clear();
 	b.load<std::array<int, 5>::iterator>(itt1, itt1);
 	std::cout << b << "Dimensione: " << b.size() << std::endl;
 
+	b.clear();
 	b.load<std::array<int, 5>::iterator>(itt1, itt2);
 	std::cout << b << "Dimensione: " << b.size() << std::endl;
 }
