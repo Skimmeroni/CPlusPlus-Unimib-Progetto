@@ -140,7 +140,7 @@ public:
 	Stack(const Stack& other)
 	: top_pos(-1), maximum_size(0), Items(nullptr)
 	{
-		clear();
+		wipe();
 
 		try {
 			Items = new T[other.maximum_size];
@@ -174,7 +174,7 @@ public:
 
 	~Stack()
 	{
-		clear();
+		wipe();
 
 		#ifndef NDEBUG
 		std::cout << "Stack::~Stack()" << std::endl;
@@ -339,7 +339,7 @@ public:
 	{
 		assert(top_pos < maximum_size);
 
-		clear();
+		wipe();
 
 		item_type d = 0;
 		I temp = it_s;
@@ -365,9 +365,34 @@ public:
 	}
 
 	/**
+		@brief Wipe
+
+		Metodo che svuota tutte le celle dello stack,
+		azzerandone la dimensione
+
+		@post top_pos == -1
+		@post maximum_size == 0
+		@post Items == nullptr
+	*/
+
+	void wipe()
+	{
+		assert(top_pos < maximum_size);
+
+		if (Items != nullptr) {
+			delete[] Items;
+			Items = nullptr;
+		}
+
+		maximum_size = 0;
+		top_pos = -1;
+	}
+
+	/**
 		@brief Clear
 
-		Metodo che svuota tutte le celle dello stack
+		Metodo che svuota tutte le celle dello stack,
+		lasciando peró intatta la dimensione
 
 		@post top_pos == -1
 	*/
@@ -377,8 +402,9 @@ public:
 		assert(top_pos < maximum_size);
 
 		if (Items != nullptr) {
-			delete[] Items;
-			Items = nullptr;
+			for (item_type i = 0; i <= top_pos; ++i) {
+				Items[i] = T();
+			}
 		}
 
 		top_pos = -1;
