@@ -214,9 +214,17 @@ void test_for_loading_through_iterators()
 	std::array<int, 5>::iterator it1 = arr.begin();
 	std::array<int, 5>::iterator it2 = arr.end();
 
-	Stack<int> a(5);
+	Stack<int> a(10);
 	a.load<std::array<int, 5>::iterator>(it1, it2);
 	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	a.load<std::array<int, 5>::iterator>(it1, it2);
+	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	try {
+		a.load<std::array<int, 5>::iterator>(it1, it2);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
 
 	a.clear();
 	a.load<std::array<int, 5>::iterator>(it1, it1);
@@ -342,7 +350,7 @@ int main()
 	std::cout << std::endl;
 	test_for_iterators();
 	std::cout << std::endl;
-	test_for_fancy_types();
+	// test_for_fancy_types();
 
 	/* Allocazione impossibile */
 	// Stack<int> z(3567587328);

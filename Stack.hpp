@@ -444,7 +444,8 @@ public:
 		Metodo che prende in input una coppia di iteratori, uno che
 		punta all'inizio di una sequenza e uno che punta alla fine
 		di una sequenza, e che riempie uno stack con i valori nel
-		mezzo.
+		mezzo. Se la dimensione é insufficiente, viene lanciata
+		una eccezione
 
 		@param it_s un iteratore che punta all'inizio della sequenza
 		@param it_e un iteratore che punta alla fine della sequenza
@@ -453,12 +454,24 @@ public:
 		@post Items != nullptr
 
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
+		@throw Maximum_size_reached se la dimensione dell'array é insufficiente
 	*/
 
 	template<typename I>
 	void load(I it_s, I it_e)
 	{
 		assert(top_pos < maximum_size);
+
+		item_type d = 0;
+		I temp = it_s;
+		while (temp != it_e) {
+			d++;
+			temp++;
+		}
+
+		if (maximum_size - (top_pos + 1) < d) {
+			throw Maximum_size_reached();
+		}
 
 		while (it_s != it_e) {
 			push(static_cast<T>(*it_s));
