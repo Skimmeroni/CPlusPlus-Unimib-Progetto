@@ -109,6 +109,8 @@ public:
 		@param it_s un iteratore che punta all'inizio della sequenza
 		@param it_e un iteratore che punta alla fine della sequenza
 
+		@pre top_pos < maximum_size
+
 		@post maximum_size == it_e - it_s
 		@post top_pos == maximum_size - 1
 
@@ -226,6 +228,8 @@ public:
 
 		@param other lo stack con cui eseguire lo scambio
 
+		@pre top_pos < maximum_size
+
 		@post this->Items == other.Items
 		@post this->top_pos == other.top_pos
 		@post this->maximum_size == other.maximum_size
@@ -250,6 +254,8 @@ public:
 		@param other lo stack da copiare
 
 		@return una reference al chiamante (this)
+
+		@pre top_pos < maximum_size
 
 		@post this->Items == other.Items
 		@post this->top_pos == other.top_pos
@@ -281,6 +287,8 @@ public:
 		ancora spazio disponibile
 
 		@param value il valore da caricare sullo stack
+
+		@pre top_pos < maximum_size
 
 		@post top_pos == top_pos + 1
 		@post Items != nullptr
@@ -314,6 +322,8 @@ public:
 		restituisce, a meno che lo stack sia vuoto
 
 		@return il valore in cima allo stack
+
+		@pre top_pos < maximum_size
 
 		@post top_pos == top_pos - 1
 		@post Items != nullptr
@@ -350,6 +360,8 @@ public:
 
 		@return il valore in cima allo stack
 
+		@pre top_pos < maximum_size
+
 		@post top_pos == top_pos - 1
 		@post Items != nullptr
 
@@ -373,6 +385,8 @@ public:
 		Metodo che restituisce se lo stack sia vuoto o meno
 
 		@return true se é vuoto, false se non lo é
+
+		@pre top_pos < maximum_size
 	*/
 
 	bool stack_empty() const
@@ -389,6 +403,8 @@ public:
 		Utile per la stampa
 
 		@return la dimensione massima dello stack
+
+		@pre top_pos < maximum_size
 	*/
 
 	item_type size() const
@@ -405,6 +421,8 @@ public:
 		Restituisce -1 se lo stack é vuoto. Utile per la stampa
 
 		@return la posizione della cima dello stack
+
+		@pre top_pos < maximum_size
 	*/
 
 	item_type head() const
@@ -419,6 +437,8 @@ public:
 
 		Metodo che svuota tutte le celle dello stack,
 		azzerandone la dimensione
+
+		@pre top_pos < maximum_size
 
 		@post top_pos == -1
 		@post maximum_size == 0
@@ -449,6 +469,8 @@ public:
 
 		@param it_s un iteratore che punta all'inizio della sequenza
 		@param it_e un iteratore che punta alla fine della sequenza
+
+		@pre top_pos < maximum_size
 
 		@post top_pos == top_pos + (it_e - it_s)
 		@post Items != nullptr
@@ -485,6 +507,8 @@ public:
 		Metodo che svuota tutte le celle dello stack,
 		lasciando peró intatta la dimensione
 
+		@pre top_pos < maximum_size
+
 		@post top_pos == -1
 	*/
 
@@ -516,6 +540,8 @@ public:
 		stack chiamante che rispettano il predicato
 
 		@param predicate il predicato con cui testare lo stack
+
+		@pre top_pos < maximum_size
 
 		@return uno stack opportunamente costruito
 	*/
