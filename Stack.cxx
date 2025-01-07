@@ -1,16 +1,34 @@
 #include "Stack.hpp"
 #include <iostream>
-#include <cmath>
 #include <array>
+#include <cassert>
+#include <cmath>
 #include <string>
 
 void test_for_empty_stack()
 {
-	/* Stack<int> vuoto */
+	std::cout << "*** Manipolazione di uno stack vuoto ***" << std::endl;
+	std::cout << std::endl;
+
 	Stack<int> a;
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
-	try {
+	assert(a.size() == 0);
+	assert(a.head() == -1);
+	std::cout << a;
+
+	try {    // Genera un'eccezione
 		a.pop();
+	}
+	catch (Minimum_size_reached) {
+		std::cerr << "Lo stack é vuoto!" << std::endl;
+	}
+
+	Stack<std::array<char, 5>> b;
+	assert(b.size() == 0);
+	assert(b.head() == -1);
+	// std::cout << b; Non é possibile!
+
+	try {    // Genera un'eccezione
+		b.pop();
 	}
 	catch (Minimum_size_reached) {
 		std::cerr << "Lo stack é vuoto!" << std::endl;
@@ -19,69 +37,156 @@ void test_for_empty_stack()
 
 void test_for_full_stack()
 {
-	/* Stack<int> pieno */
-	Stack<int> a(1);
-	a.push(1);
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
-	try {
-		a.push(7);
+	std::cout << "*** Manipolazione di uno stack pieno ***" << std::endl;
+	std::cout << std::endl;
+
+	Stack<int> a(3);
+	assert(a.size() == 3);
+	assert(a.head() == -1);
+	std::cout << a;
+
+	try {    // NON genera un'eccezione
+		a.push(1);
 	}
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
+	assert(a.size() == 3);
+	assert(a.head() == 0);
+	std::cout << a;
+
+	try {    // NON genera un'eccezione
+		a.push(2);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+	assert(a.size() == 3);
+	assert(a.head() == 1);
+	std::cout << a;
+
+	try {    // NON genera un'eccezione
+		a.push(3);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+	assert(a.size() == 3);
+	assert(a.head() == 2);
+	std::cout << a;
+
+	try {    // Genera un'eccezione
+		a.push(4);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+	assert(a.size() == 3);
+	assert(a.head() == 2);
+	std::cout << a;
 }
 
 void test_for_push_pop()
 {
-	/* Carico e scarico di uno stack */
+	std::cout << "*** Carico/scarico di uno stack mediante push/pop ***" << std::endl;
+	std::cout << std::endl;
+
 	Stack<unsigned int> a(10);
-	unsigned int s = static_cast<unsigned int>(a.size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
+	assert(a.size() == 10);
+	assert(a.head() == -1);
+	std::cout << a;
+
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
+		try {    // NON genera un'eccezione
 			a.push(i);
 		}
 		catch (Maximum_size_reached) {
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	assert(a.size() == 10);
+	assert(a.head() == 9);
+	std::cout << a;
+
 	for (unsigned int i = 0; i < 3; ++i) {
-		try {
+		try {    // NON genera un'eccezione
 			a.pop();
 		}
 		catch (Minimum_size_reached) {
 			std::cerr << "Lo stack é vuoto!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
-	s = static_cast<unsigned int>(a.size());
-	for (unsigned int i = 0; i < s - 3; ++i) {
-		try {
+	assert(a.size() == 10);
+	assert(a.head() == 6);
+	std::cout << a;
+
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()) - 3; ++i) {
+		try {    // NON genera un'eccezione
 			a.pop();
 		}
 		catch (Minimum_size_reached) {
 			std::cerr << "Lo stack é vuoto!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	assert(a.size() == 10);
+	assert(a.head() == -1);
+	std::cout << a;
+
+	for (unsigned int i = 0; i < 2; ++i) {
+		try {    // NON genera un'eccezione
+			a.push(i);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
+	assert(a.size() == 10);
+	assert(a.head() == 1);
+	std::cout << a;
+
+	for (unsigned int i = 2; i < 6; ++i) {
+		try {    // NON genera un'eccezione
+			a.push(i);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
+	assert(a.size() == 10);
+	assert(a.head() == 5);
+	std::cout << a;
 }
 
 void test_for_clear()
 {
-	/* Carico di uno stack con il medesimo valore mediante costruttore */
-	Stack<int> a(5);
-	unsigned int s = static_cast<unsigned int>(a.size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
+	std::cout << "*** Svuotamento di uno stack ***" << std::endl;
+	std::cout << std::endl;
+
+	Stack<unsigned int> a(5);
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
+		try {    // NON genera un'eccezione
 			a.push(100);
 		}
 		catch (Maximum_size_reached) {
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	assert(a.size() == 5);
+	assert(a.head() == 4);
+	std::cout << a;
+
+	Stack<unsigned int>::const_iterator a_s = a.begin();
+	Stack<unsigned int>::const_iterator a_e = a.end();
+
+	while (a_s != a_e) {
+		assert(*a_s == 100);
+		a_s++;
+	}
+
 	a.clear();
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	assert(a.size() == 5);
+	assert(a.head() == -1);
+	std::cout << a;
 }
 
 void test_for_copy_constructor()
