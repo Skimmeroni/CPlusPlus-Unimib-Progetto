@@ -11,7 +11,7 @@ void test_for_empty_stack()
 	std::cout << std::endl;
 
 	Stack<int> a;
-	assert(a.size() == 0);
+	assert(a.get_size() == 0);
 	assert(a.head() == -1);
 	std::cout << a;
 
@@ -23,7 +23,7 @@ void test_for_empty_stack()
 	}
 
 	Stack<std::array<char, 5>> b;
-	assert(b.size() == 0);
+	assert(b.get_size() == 0);
 	assert(b.head() == -1);
 	// std::cout << b; Non é possibile!
 
@@ -41,7 +41,7 @@ void test_for_full_stack()
 	std::cout << std::endl;
 
 	Stack<int> a(3);
-	assert(a.size() == 3);
+	assert(a.get_size() == 3);
 	assert(a.head() == -1);
 	std::cout << a;
 
@@ -51,7 +51,7 @@ void test_for_full_stack()
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
-	assert(a.size() == 3);
+	assert(a.get_size() == 3);
 	assert(a.head() == 0);
 	std::cout << a;
 
@@ -61,7 +61,7 @@ void test_for_full_stack()
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
-	assert(a.size() == 3);
+	assert(a.get_size() == 3);
 	assert(a.head() == 1);
 	std::cout << a;
 
@@ -71,7 +71,7 @@ void test_for_full_stack()
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
-	assert(a.size() == 3);
+	assert(a.get_size() == 3);
 	assert(a.head() == 2);
 	std::cout << a;
 
@@ -81,7 +81,7 @@ void test_for_full_stack()
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
-	assert(a.size() == 3);
+	assert(a.get_size() == 3);
 	assert(a.head() == 2);
 	std::cout << a;
 }
@@ -92,11 +92,11 @@ void test_for_push_pop()
 	std::cout << std::endl;
 
 	Stack<unsigned int> a(10);
-	assert(a.size() == 10);
+	assert(a.get_size() == 10);
 	assert(a.head() == -1);
 	std::cout << a;
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
 		try {    // NON genera un'eccezione
 			a.push(i);
 		}
@@ -104,7 +104,7 @@ void test_for_push_pop()
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	assert(a.size() == 10);
+	assert(a.get_size() == 10);
 	assert(a.head() == 9);
 	std::cout << a;
 
@@ -116,11 +116,11 @@ void test_for_push_pop()
 			std::cerr << "Lo stack é vuoto!" << std::endl;
 		}
 	}
-	assert(a.size() == 10);
+	assert(a.get_size() == 10);
 	assert(a.head() == 6);
 	std::cout << a;
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()) - 3; ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()) - 3; ++i) {
 		try {    // NON genera un'eccezione
 			a.pop();
 		}
@@ -128,7 +128,7 @@ void test_for_push_pop()
 			std::cerr << "Lo stack é vuoto!" << std::endl;
 		}
 	}
-	assert(a.size() == 10);
+	assert(a.get_size() == 10);
 	assert(a.head() == -1);
 	std::cout << a;
 
@@ -140,7 +140,7 @@ void test_for_push_pop()
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	assert(a.size() == 10);
+	assert(a.get_size() == 10);
 	assert(a.head() == 1);
 	std::cout << a;
 
@@ -152,7 +152,7 @@ void test_for_push_pop()
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	assert(a.size() == 10);
+	assert(a.get_size() == 10);
 	assert(a.head() == 5);
 	std::cout << a;
 }
@@ -163,7 +163,7 @@ void test_for_clear()
 	std::cout << std::endl;
 
 	Stack<unsigned int> a(5);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
 		try {    // NON genera un'eccezione
 			a.push(100);
 		}
@@ -171,7 +171,7 @@ void test_for_clear()
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	assert(a.size() == 5);
+	assert(a.get_size() == 5);
 	assert(a.head() == 4);
 	std::cout << a;
 
@@ -184,7 +184,7 @@ void test_for_clear()
 	}
 
 	a.clear();
-	assert(a.size() == 5);
+	assert(a.get_size() == 5);
 	assert(a.head() == -1);
 	std::cout << a;
 }
@@ -193,7 +193,7 @@ void test_for_copy_constructor()
 {
 	/* Costruttore di copia */
 	Stack<int> a(9);
-	unsigned int s = static_cast<unsigned int>(a.size());
+	unsigned int s = static_cast<unsigned int>(a.get_size());
 	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(81);
@@ -203,14 +203,14 @@ void test_for_copy_constructor()
 		}
 	}
 	Stack<int> b = a;
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 }
 
 void test_for_assignment()
 {
 	/* Assegnamento */
 	Stack<int> a(12);
-	unsigned int s = static_cast<unsigned int>(a.size());
+	unsigned int s = static_cast<unsigned int>(a.get_size());
 	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(0);
@@ -221,7 +221,7 @@ void test_for_assignment()
 	}
 	Stack<int> b;
 	b = a;
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 }
 
 void test_for_filter_out()
@@ -246,7 +246,7 @@ void test_for_filter_out()
 	};
 
 	Stack<unsigned int> a(10);
-	unsigned int s = static_cast<unsigned int>(a.size());
+	unsigned int s = static_cast<unsigned int>(a.get_size());
 	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(i);
@@ -255,19 +255,19 @@ void test_for_filter_out()
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 
 	Comparison1 comp1;
 	Stack<unsigned int> b = a.filter_out<Comparison1>(comp1);
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 
 	Comparison2 comp2;
 	Stack<unsigned int> c = a.filter_out<Comparison2>(comp2);
-	std::cout << c << "Dimensione: " << c.size() << std::endl;
+	std::cout << c << "Dimensione: " << c.get_size() << std::endl;
 
 	Comparison3 comp3;
 	Stack<unsigned int> d = a.filter_out<Comparison3>(comp3);
-	std::cout << d << "Dimensione: " << d.size() << std::endl;
+	std::cout << d << "Dimensione: " << d.get_size() << std::endl;
 }
 
 void test_for_transform()
@@ -286,7 +286,7 @@ void test_for_transform()
 	};
 
 	Stack<int> a(5);
-	unsigned int s = static_cast<unsigned int>(a.size());
+	unsigned int s = static_cast<unsigned int>(a.get_size());
 	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(100);
@@ -295,10 +295,10 @@ void test_for_transform()
 			std::cerr << "Lo stack é pieno!" << std::endl;
 		}
 	}
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 	Modifier1 mod1;
 	transform<int, Modifier1>(a, mod1);
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 
 	Stack<int> b(5);
 	b.push(100);
@@ -306,10 +306,10 @@ void test_for_transform()
 	b.push(300);
 	b.push(400);
 	b.push(500);
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 	Modifier2 mod2;
 	transform<int, Modifier2>(b, mod2);
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 }
 
 void test_for_loading_through_iterators()
@@ -321,9 +321,9 @@ void test_for_loading_through_iterators()
 
 	Stack<int> a(10);
 	a.load<std::array<int, 5>::iterator>(it1, it2);
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 	a.load<std::array<int, 5>::iterator>(it1, it2);
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 	try {
 		a.load<std::array<int, 5>::iterator>(it1, it2);
 	}
@@ -333,32 +333,32 @@ void test_for_loading_through_iterators()
 
 	a.clear();
 	a.load<std::array<int, 5>::iterator>(it1, it1);
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 
 	a.clear();
 	a.load<std::array<int, 5>::iterator>(it2, it2);
-	std::cout << a << "Dimensione: " << a.size() << std::endl;
+	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
 
 	int arrr[5] = {10, 20, 30, 40, 50};
 	int* itt1 = &arrr[0];
 	int* itt2 = &arrr[4];
 	Stack<int> b(itt1, itt2);
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 
 	b.clear();
 	b.load<std::array<int, 5>::iterator>(itt1, itt1);
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 
 	b.clear();
 	b.load<std::array<int, 5>::iterator>(itt1, itt2);
-	std::cout << b << "Dimensione: " << b.size() << std::endl;
+	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
 }
 
 void test_for_iterators()
 {
 	/* Iteratori della classe */
 	Stack<int> a(6);
-	unsigned int s = static_cast<unsigned int>(a.size());
+	unsigned int s = static_cast<unsigned int>(a.get_size());
 	for (unsigned int i = 0; i < s; ++i) {
 		try {
 			a.push(85 + i);
@@ -430,7 +430,7 @@ void test_for_fancy_types()
 	Stack<std::array<int, 3>> b(it1, it2);
 	b.pop();
 	b.push(std::array<int, 3>());
-	// std::cout << b << "Dimensione: " << b.size() << std::endl;
+	// std::cout << b << "Dimensione: " << b.get_size() << std::endl;
  }
 
 int main()

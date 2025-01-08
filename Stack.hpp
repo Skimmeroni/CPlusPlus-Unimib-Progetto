@@ -397,7 +397,7 @@ public:
 	}
 
 	/**
-		@brief Size
+		@brief Get size
 
 		Metodo che restituisce la dimensione massima dello stack.
 		Utile per la stampa
@@ -407,7 +407,7 @@ public:
 		@pre top_pos < maximum_size
 	*/
 
-	item_type size() const
+	item_type get_size() const
 	{
 		assert(top_pos < maximum_size);
 
@@ -813,7 +813,7 @@ std::ostream& operator<<(std::ostream& os, const Stack<T>& stack)
 		start++;
 	}
 
-	for (typename Stack<T>::item_type i = stack.head() + 1; i < stack.size(); ++i) {
+	for (typename Stack<T>::item_type i = stack.head() + 1; i < stack.get_size(); ++i) {
 		os << "[] ";
 	}
 	os << "}" << std::endl;
