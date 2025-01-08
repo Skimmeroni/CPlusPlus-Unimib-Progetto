@@ -826,7 +826,7 @@ public:
 	iterator begin()
 	{
 		if (!stack_empty()) {
-			return iterator(&Items[0]);
+			return iterator(Items);
 		} else {
 			return iterator(nullptr);
 		}
@@ -835,18 +835,17 @@ public:
 	const_iterator begin() const
 	{
 		if (!stack_empty()) {
-		return const_iterator(&Items[0]);
+		return const_iterator(Items);
 		} else {
 			return const_iterator(nullptr);
 		}
 	}
 
 	// Ritorna l'iteratore alla fine della sequenza
-	// Nota: sommare 1 NON é safe
 	iterator end()
 	{
 		if (!stack_empty()) {
-		return iterator(&Items[top_pos] + 1);
+		return iterator(Items + top_pos + 1);
 		} else {
 			return iterator(nullptr);
 		}
@@ -855,7 +854,7 @@ public:
 	const_iterator end() const
 	{
 		if (!stack_empty()) {
-		return const_iterator(&Items[top_pos] + 1);
+		return const_iterator(Items + top_pos + 1);
 		} else {
 			return const_iterator(nullptr);
 		}
