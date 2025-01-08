@@ -433,6 +433,51 @@ void test_for_fancy_types()
 	// std::cout << b << "Dimensione: " << b.get_size() << std::endl;
  }
 
+void test_square_brackets()
+{
+	Stack<unsigned int> a(5);
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+		try {    // NON genera un'eccezione
+			a.push(100);
+		}
+		catch (Maximum_size_reached) {
+			std::cerr << "Lo stack é pieno!" << std::endl;
+		}
+	}
+	assert(a.get_size() == 5);
+	assert(a.head() == 4);
+	std::cout << a;
+
+	try {
+		std::cout << a[0] << std::endl;
+	}
+	catch (Item_out_of_bounds) {
+		std::cerr << "L'elemento non esiste!" << std::endl;
+	}
+
+	try {
+		std::cout << a[5] << std::endl;
+	}
+	catch (Item_out_of_bounds) {
+		std::cerr << "L'elemento non esiste!" << std::endl;
+	}
+
+	try {
+		std::cout << a[-1] << std::endl;
+	}
+	catch (Item_out_of_bounds) {
+		std::cerr << "L'elemento non esiste!" << std::endl;
+	}
+
+	a.wipe();
+	try {
+		std::cout << a[10] << std::endl;
+	}
+	catch (Item_out_of_bounds) {
+		std::cerr << "L'elemento non esiste!" << std::endl;
+	}
+}
+
 int main()
 {
 	test_for_empty_stack();
@@ -454,6 +499,8 @@ int main()
 	test_for_loading_through_iterators();
 	std::cout << std::endl;
 	test_for_iterators();
+	std::cout << std::endl;
+	test_square_brackets();
 	std::cout << std::endl;
 	// test_for_fancy_types();
 
