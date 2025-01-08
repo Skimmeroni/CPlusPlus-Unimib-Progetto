@@ -415,6 +415,81 @@ public:
 	}
 
 	/**
+		@brief Set size
+
+		Metodo che permette di modificare la dimensione massima
+		dello stack. Se la dimensione é insufficiente a contenere
+		gli elementi giá presenti, viene restituita una eccezione.
+
+		@param size la nuova dimensione
+
+		@pre top_pos < maximum_size
+
+		@post maximum_size == size
+
+		@throw Maximum_size_reached se la nuova dimensione é insufficiente
+	*/
+
+	/*
+	void set_size(const item_type& size)
+	{
+		assert(top_pos < maximum_size);
+
+		if (size <= top_pos + 1) {
+			throw Maximum_size_reached();
+		}
+
+		maximum_size = size;
+
+		if (Items != nullptr) {
+			T* Tmp;
+			try {
+				Tmp = new T[size];
+			}
+			catch (std::bad_alloc const&) {
+				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+				throw;
+			}
+
+			for (item_type i = 0; i <= top_pos + 1; ++i) {
+				try {
+					Tmp[i] = Items[i];
+				}
+				catch (std::bad_alloc const&) {
+					std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+					wipe();
+					throw;
+				}
+			}
+
+			delete[] Items;
+			Items = nullptr;
+			Items = Tmp;
+		} else {
+			if (size != 0) {
+				try {
+					Items = new T[maximum_size];
+				}
+				catch (std::bad_alloc const&) {
+					std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+					throw;
+				}
+				for (item_type i = 0; i < maximum_size; ++i) {
+					try {
+						Items[i] = T();
+					}
+					catch (std::bad_alloc const&) {
+						std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+						wipe();
+						throw;
+					}
+				}
+			}
+		}
+	}
+	*/
+
+	/**
 		@brief Head
 
 		Metodo che restituisce la posizione della cima dello stack.
@@ -476,7 +551,7 @@ public:
 		@post Items != nullptr
 
 		@throw std::bad_alloc se l'allocazione della memoria fallisce
-		@throw Maximum_size_reached se la dimensione dell'array é insufficiente
+		@throw Maximum_size_reached se la dimensione dello stack é insufficiente
 	*/
 
 	template<typename I>
