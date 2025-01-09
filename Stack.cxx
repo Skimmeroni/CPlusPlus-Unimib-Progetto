@@ -331,6 +331,32 @@ void test_for_loading_through_iterators()
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
 
+	a.set_size(15);
+	std::cout << a;
+	try {
+		a.load<std::array<int, 5>::iterator>(it1, it2);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+	std::cout << a;
+	try {
+		a.set_size(14);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+
+	a.clear();
+	std::cout << a;
+	try {
+		a.load<std::array<int, 5>::iterator>(it1, it2);
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
+	std::cout << a;
+
 	a.clear();
 	a.load<std::array<int, 5>::iterator>(it1, it1);
 	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
