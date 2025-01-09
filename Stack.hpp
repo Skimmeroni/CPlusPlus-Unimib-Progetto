@@ -303,16 +303,16 @@ public:
 
 		if (maximum_size == top_pos + 1) {
 			throw Maximum_size_reached();
-		} else {
-			top_pos++;
-			try {
-				Items[top_pos] = value;
-			}
-			catch (std::bad_alloc const&) {
-				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
-				wipe();
-				throw;
-			}
+		}
+
+		top_pos++;
+		try {
+			Items[top_pos] = value;
+		}
+		catch (std::bad_alloc const&) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			wipe();
+			throw;
 		}
 	}
 
@@ -338,19 +338,19 @@ public:
 
 		if (stack_empty()) {
 			throw Minimum_size_reached();
-		} else {
-			T old_top = Items[top_pos];
-			try {
-				Items[top_pos] = T();
-			}
-			catch (std::bad_alloc const&) {
-				std::cerr << "Allocazione di memoria fallita :(" << std::endl;
-				wipe();
-				throw;
-			}
-			top_pos--;
-			return old_top;
 		}
+
+		T old_top = Items[top_pos];
+		try {
+			Items[top_pos] = T();
+		}
+		catch (std::bad_alloc const&) {
+			std::cerr << "Allocazione di memoria fallita :(" << std::endl;
+			wipe();
+			throw;
+		}
+		top_pos--;
+		return old_top;
 	}
 
 	/**
@@ -375,9 +375,9 @@ public:
 
 		if (stack_empty()) {
 			throw Minimum_size_reached();
-		} else {
-			return Items[top_pos];
 		}
+
+		return Items[top_pos];
 	}
 
 	/**
