@@ -1,10 +1,9 @@
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QFileSystemWatcher>
 #include <QString>
-
-#include <chrono>
-#include <thread>
 
 enum Action {Nothing, Modified, Added, Deleted};
 
@@ -192,8 +191,9 @@ void fileSystemInspection()
     }
 }
 
-int main()
-{
+int main(int argc, char* argv[]) {
+    QCoreApplication a(argc, argv);
+
     QDir chosenDirectory(dirName);
     QStringList DirContent = chosenDirectory.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
 
@@ -207,14 +207,13 @@ int main()
         ++start;
     }
 
-    loadLogFromFile();
+    // loadLogFromFile();
 
-    while (true) {
-        fileSystemInspection();
-        exportLogToFile();
+    // QFileSystemWatcher overwatch;
+    // overwatch.addPath(dirName);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(3));
-    }
+    // fileSystemInspection();
+    // exportLogToFile();
 
-	return 0;
+	return a.exec();
 }
