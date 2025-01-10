@@ -3,6 +3,9 @@
 #include <QFile>
 #include <QString>
 
+#include <chrono>
+#include <thread>
+
 enum Action {Nothing, Modified, Added, Deleted};
 
 struct PackedFile {
@@ -89,7 +92,7 @@ struct CmpIncreasingTimestamp {
 static QVector<PackedFile> CollectedEvents(0);
 static QMap<QString, QDateTime> DirStatus;
 static const QString logPath = "/home/shania/Documents/log.csv";
-static const QString dirName = "/home/shania/Codebits/C++";
+static const QString dirName = "/home/shania/Codebits/C++/";
 
 void exportLogToFile()
 {
@@ -135,7 +138,7 @@ void fileSystemInspection()
 {
     // É una aggiunta
     QDir chosenDirectory(dirName);
-    QStringList DirContent = chosenDirectory.entryList();
+    QStringList DirContent = chosenDirectory.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
 
     QStringList::const_iterator start_1 = DirContent.cbegin();
     QStringList::const_iterator finish_1 = DirContent.cend();
@@ -143,7 +146,7 @@ void fileSystemInspection()
     while (start_1 != finish_1) {
         QString thisFile = *start_1;
         if (DirStatus.count(thisFile) <= 0) {
-            QDateTime lastModified = QFileInfo(thisFile).lastModified();
+            QDateTime lastModified = QFileInfo(dirName + thisFile).lastModified();
             PackedFile p(thisFile, Added, lastModified);
             CollectedEvents.push_back(p);
             DirStatus[thisFile] = lastModified;
@@ -158,7 +161,7 @@ void fileSystemInspection()
 
     while (start_2 != finish_2) {
         QString thisFile = start_2->first;
-        if (QFileInfo(thisFile).exists()) {
+        if (!QFileInfo(dirName + thisFile).exists()) {
             QDateTime lastModified = start_2->second;
             PackedFile p(thisFile, Deleted, lastModified);
             CollectedEvents.push_back(p);
@@ -174,9 +177,9 @@ void fileSystemInspection()
 
     while (start_3 != finish_3) {
         QString thisFile = start_3->first;
-        if (QFileInfo(thisFile).exists()) {
+        if (QFileInfo(dirName + thisFile).exists()) {
             QDateTime timestampInTheMap = start_3->second;
-            QDateTime timestampInTheDir = QFileInfo(thisFile).lastModified();
+            QDateTime timestampInTheDir = QFileInfo(dirName + thisFile).lastModified();
 
             if (timestampInTheMap != timestampInTheDir) {
                 PackedFile p(thisFile, Modified, timestampInTheDir);
@@ -192,17 +195,25 @@ void fileSystemInspection()
 int main()
 {
     QDir chosenDirectory(dirName);
-    QStringList DirContent = chosenDirectory.entryList();
+    QStringList DirContent = chosenDirectory.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
 
     QStringList::const_iterator start = DirContent.cbegin();
     QStringList::const_iterator finish = DirContent.cend();
 
     while (start != finish) {
         QString thisFile = *start;
-        QDateTime lastModified = QFileInfo(thisFile).lastModified();
-
+        QDateTime lastModified = QFileInfo(dirName + thisFile).lastModified();
         DirStatus[thisFile] = lastModified;
         ++start;
+    }
+
+    loadLogFromFile();
+
+    while (true) {
+        fileSystemInspection();
+        exportLogToFile();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
     }
 
 	return 0;
