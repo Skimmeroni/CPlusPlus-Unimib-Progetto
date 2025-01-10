@@ -1,35 +1,21 @@
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <map>
-#include <chrono>
-#include <vector>
-#include <algorithm>
-#include <ctime>
-
-namespace fs = std::filesystem;
-namespace chr = std::chrono;
-
-std::time_t fileTimeToTimeT(const fs::file_time_type& fileTime) {
-    auto sctp = chr::time_point_cast<chr::system_clock::duration>(
-    fileTime - fs::file_time_type::clock::now() + chr::system_clock::now());
-
-    return chr::system_clock::to_time_t(sctp);
-}
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QString>
 
 enum Action {Nothing, Modified, Added, Deleted};
 
 struct PackedFile {
-    std::string fileName;
+    QString fileName;
     Action action;
-    std::time_t timestamp;
+    QDateTime timestamp;
 
     PackedFile()
-    : fileName(""), action(Nothing), timestamp(0)
+    : fileName(QString()), action(Nothing), timestamp(QDateTime())
     {}
 
-    PackedFile(std::string fileName, Action action, std::time_t timestamp)
-    : fileName(""), action(Nothing), timestamp(0)
+    PackedFile(QString fileName, Action action, QDateTime timestamp)
+    : fileName(QString()), action(Nothing), timestamp(QDateTime())
     {
         this->fileName = fileName;
         this->action = action;
@@ -46,7 +32,7 @@ struct PackedFile {
     }
 
     PackedFile(const PackedFile& other)
-    : fileName(""), action(Nothing), timestamp(0)
+    : fileName(QString()), action(Nothing), timestamp(QDateTime())
     {
         this->fileName = other.fileName;
         this->action = other.action;
@@ -100,32 +86,24 @@ struct CmpIncreasingTimestamp {
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const PackedFile& p) {
-    os << p.fileName << "," << p.action << "," << p.timestamp << std::endl;
-    return os;
-}
-
-// Vettore con le triplette [nome del file, tipo di modifica, timestamp]
-static std::vector<PackedFile> Modifications;
-
-// Mappa che ha per chiave il file e per valore il suo timestamp
-// Non possono esistere due file con lo stesso nome quindi non é
-// un problema
-static std::map<std::string, std::time_t> DirectoryStructure;
-
-// File log di output
-static const std::string logPath = "/home/shania/Documents/log.csv"; 
+static QVector<PackedFile> CollectedEvents(0);
+static QMap<QString, QDateTime> DirStatus;
+static const QString logPath = "/home/shania/Documents/log.csv";
+static const QString dirName = "/home/shania/Codebits/C++";
 
 void exportLogToFile()
 {
-    std::ofstream logFile;
-    logFile.open(logPath);
+    QFile logFile(logPath);
+    logFile.open(QIODevice::WriteOnly);
+    QTextStream output(&logFile);
 
-    std::vector<PackedFile>::iterator start = Modifications.begin();
-    std::vector<PackedFile>::iterator finish = Modifications.end();
+    QVector<PackedFile>::const_iterator start = CollectedEvents.cbegin();
+    QVector<PackedFile>::const_iterator finish = CollectedEvents.cend();
 
     while (start != finish) {
-        logFile << *start;
+        output << start->fileName << ","
+               << start->action << ","
+               << (start->timestamp).toString() << "\n";
         ++start;
     }
 
@@ -134,101 +112,98 @@ void exportLogToFile()
 
 void loadLogFromFile()
 {
-    std::fstream logFile;
-    logFile.open(logPath);
+    QFile logFile(logPath);
+    logFile.open(QIODevice::ReadOnly);
+    QTextStream input(&logFile);
 
-    std::string thisLine;
-    while (std::getline(logFile, thisLine)) {
-        std::stringstream ss(thisLine);
-        std::string a, b, c;
+    QString thisLine;
+    while (input.readLineInto(&thisLine)) {
+        QStringList thisLineTokens = thisLine.split(u',', Qt::SkipEmptyParts);
 
-        std::getline(ss, a, ',');
-        std::getline(ss, b, ',');
-        std::getline(ss, c, ',');
+        QString a = thisLineTokens[0];
+        Action b = Action(thisLineTokens[1].toInt());
+        QDateTime c = QDateTime::fromString(thisLineTokens[2]);
 
-        Action b_p = Action(std::stoi(b));
-        std::time_t c_p = std::time_t(std::stoi(c));
-        PackedFile p(a, b_p, c_p);
-        Modifications.push_back(p);
+        PackedFile thisEvent(a, b, c);
+        CollectedEvents.push_back(thisEvent);
     }
 
     logFile.close();
 }
 
-void filesystemInspection()
+void fileSystemInspection()
 {
-    // Controlla se i file nella directory corrente sono nella mappa oppure no
-    fs::directory_iterator it(fs::current_path());
-    while (it != fs::directory_iterator()) {
-        fs::path thisFile = *it;
-        if (DirectoryStructure.count(thisFile) <= 0) {
-            std::time_t thisTm = fileTimeToTimeT(fs::last_write_time(thisFile));
-            PackedFile p(thisFile, Added, thisTm);
-            Modifications.push_back(p);
-            DirectoryStructure[thisFile] = thisTm;
+    // É una aggiunta
+    QDir chosenDirectory(dirName);
+    QStringList DirContent = chosenDirectory.entryList();
+
+    QStringList::const_iterator start_1 = DirContent.cbegin();
+    QStringList::const_iterator finish_1 = DirContent.cend();
+
+    while (start_1 != finish_1) {
+        QString thisFile = *start_1;
+        if (DirStatus.count(thisFile) <= 0) {
+            QDateTime lastModified = QFileInfo(thisFile).lastModified();
+            PackedFile p(thisFile, Added, lastModified);
+            CollectedEvents.push_back(p);
+            DirStatus[thisFile] = lastModified;
             break;
         }
-        ++it;
+        ++start_1;
     }
 
-    // Controlla se i file nella mappa sono nella directory corrente oppure no
-    std::map<std::string, std::time_t>::iterator start = DirectoryStructure.begin();
-    std::map<std::string, std::time_t>::iterator finish = DirectoryStructure.end();
+    // É una rimozione
+    QMap<QString, QDateTime>::key_value_iterator start_2 = DirStatus.keyValueBegin();
+    QMap<QString, QDateTime>::key_value_iterator finish_2 = DirStatus.keyValueEnd();
 
-    while (start != finish) {
-        fs::path thisFile = start->first;
-        if (!fs::exists(thisFile)) {
-            std::time_t thisTm = start->second;
-            PackedFile p(thisFile, Deleted, thisTm);
-            Modifications.push_back(p);
-            DirectoryStructure.erase(start);
+    while (start_2 != finish_2) {
+        QString thisFile = start_2->first;
+        if (QFileInfo(thisFile).exists()) {
+            QDateTime lastModified = start_2->second;
+            PackedFile p(thisFile, Deleted, lastModified);
+            CollectedEvents.push_back(p);
+            DirStatus.remove(start_2->first);
             break;
-        } 
-        ++start;
+        }
+        ++start_2;
     }
 
-    // Compara i timestamp
-    start = DirectoryStructure.begin();
+    // É una modifica
+    QMap<QString, QDateTime>::key_value_iterator start_3 = DirStatus.keyValueBegin();
+    QMap<QString, QDateTime>::key_value_iterator finish_3 = DirStatus.keyValueEnd();
 
-    while (start != finish) {
-        fs::path thisFile = start->first;
-        if (fs::exists(thisFile)) {
-            std::time_t ts_in_the_map = start->second;            
-            std::time_t ts_in_the_dir = fileTimeToTimeT(fs::last_write_time(thisFile));
+    while (start_3 != finish_3) {
+        QString thisFile = start_3->first;
+        if (QFileInfo(thisFile).exists()) {
+            QDateTime timestampInTheMap = start_3->second;
+            QDateTime timestampInTheDir = QFileInfo(thisFile).lastModified();
 
-            if (ts_in_the_dir != ts_in_the_map) {
-                PackedFile p(thisFile, Modified, ts_in_the_dir);
-                Modifications.push_back(p);
-                DirectoryStructure[thisFile] = ts_in_the_dir;
+            if (timestampInTheMap != timestampInTheDir) {
+                PackedFile p(thisFile, Modified, timestampInTheDir);
+                CollectedEvents.push_back(p);
+                DirStatus[thisFile] = timestampInTheDir;
                 break;
             }
         }
-        ++start;
+        ++start_3;
     }
 }
 
-int main(int argc, char* argv[])
+int main()
 {
-    // Itera lungo la directory e aggiungi ogni file con il suo timestamp
-    // alla mappa
-    fs::directory_iterator it(fs::current_path());
-    while (it != fs::directory_iterator()) {
-        fs::path thisFile = *it;
-        DirectoryStructure[thisFile] = fileTimeToTimeT(fs::last_write_time(thisFile));
-        ++it;
+    QDir chosenDirectory(dirName);
+    QStringList DirContent = chosenDirectory.entryList();
+
+    QStringList::const_iterator start = DirContent.cbegin();
+    QStringList::const_iterator finish = DirContent.cend();
+
+    while (start != finish) {
+        QString thisFile = *start;
+        QDateTime lastModified = QFileInfo(thisFile).lastModified();
+
+        DirStatus[thisFile] = lastModified;
+        ++start;
     }
 
-    std::cout << "Loading from " << logPath << std::endl;
-    loadLogFromFile();
-
-    // Inizia il loop
-    while (true) {
-        filesystemInspection();
-
-        std::sort(Modifications.begin(), Modifications.end(), CmpIncreasingTimestamp());
-
-        exportLogToFile();
-    }
-
-    return 0;
+	return 0;
 }
