@@ -91,9 +91,8 @@ struct CmpIncreasingTimestamp {
 
 static QVector<PackedFile> CollectedEvents(0);
 static QMap<QString, QDateTime> DirStatus;
-static const QString logPath = "/home/shania/Documents/log.csv";
-static const QString dirName = "/home/shania/Codebits/C++/";
-*/
+static const QString logPath = "";
+static const QString dirName = "";
 
 void exportLogToFile()
 {
@@ -135,7 +134,6 @@ void loadLogFromFile()
     logFile.close();
 }
 
-/*
 void fileSystemInspection()
 {
     // É una aggiunta
