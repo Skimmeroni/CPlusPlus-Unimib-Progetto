@@ -8,9 +8,13 @@ DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
     , ChosenDirStatus(QMap<QString, QDateTime>())
     , chosenDirName(QString())
     , overwatch(QFileSystemWatcher())
+    , trigger(QTimer())
 {
     QObject::connect(&(this->overwatch), &QFileSystemWatcher::directoryChanged,
                      this, &DirectoryOverwatch::fileSystemInspection);
+    QObject::connect(&(this->trigger), &QTimer::timeout,
+                     this, &DirectoryOverwatch::updateTable);
+    // this->trigger.start(3000);
     ui->setupUi(this);
 }
 
@@ -51,25 +55,31 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
 
         QString logPath = this->chosenDirName + ".overwatch.log";
         if (QFileInfo(logPath).exists()) {
-            QFile logFile(logPath);
-            logFile.open(QIODevice::ReadOnly);
-            QTextStream input(&logFile);
-
-            QString thisLine;
-            while (input.readLineInto(&thisLine)) {
-                QStringList thisLineTokens = thisLine.split(u',', Qt::SkipEmptyParts);
-
-                QString a = thisLineTokens[0];
-                QString b = thisLineTokens[1];
-                QDateTime c = QDateTime::fromString(thisLineTokens[2]);
-
-                PackedFile thisEvent(a, b, c);
-                this->CollectedEvents.push_back(thisEvent);
-            }
-
-            logFile.close();
+            loadLogFromFile();
         }
     }
+}
+
+void DirectoryOverwatch::loadLogFromFile()
+{
+    QString logPath = this->chosenDirName + ".overwatch.log";
+    QFile logFile(logPath);
+    logFile.open(QIODevice::ReadOnly);
+    QTextStream input(&logFile);
+
+    QString thisLine;
+    while (input.readLineInto(&thisLine)) {
+        QStringList thisLineTokens = thisLine.split(u',', Qt::SkipEmptyParts);
+
+        QString a = thisLineTokens[0];
+        QString b = thisLineTokens[1];
+        QDateTime c = QDateTime::fromString(thisLineTokens[2]);
+
+        PackedFile thisEvent(a, b, c);
+        this->CollectedEvents.push_back(thisEvent);
+    }
+
+    logFile.close();
 }
 
 void DirectoryOverwatch::fileSystemInspection()
@@ -130,7 +140,32 @@ void DirectoryOverwatch::fileSystemInspection()
     }
 }
 
+void DirectoryOverwatch::exportLogToFile()
+{
+    QString logPath = this->chosenDirName + ".overwatch.log";
+    QFile logFile(logPath);
+    logFile.open(QIODevice::WriteOnly);
+    QTextStream output(&logFile);
+
+    QVector<PackedFile>::const_iterator start = this->CollectedEvents.cbegin();
+    QVector<PackedFile>::const_iterator finish = this->CollectedEvents.cend();
+
+    while (start != finish) {
+        output << start->fileName << ","
+               << start->action << ","
+               << (start->timestamp).toString() << "\n";
+        ++start;
+    }
+
+    logFile.close();
+}
+
 void DirectoryOverwatch::on_refresh_clicked()
+{
+    updateTable();
+}
+
+void DirectoryOverwatch::updateTable()
 {
     QVector<PackedFile>::const_iterator start = this->CollectedEvents.cbegin();
     QVector<PackedFile>::const_iterator finish = this->CollectedEvents.cend();
@@ -157,20 +192,10 @@ void DirectoryOverwatch::on_refresh_clicked()
         ui->tabledContent->setItem(i, 2, new QTableWidgetItem(start->action));
         ui->tabledContent->setItem(i, 3, new QTableWidgetItem((start->timestamp).toString()));
     }
-
-    QString logPath = this->chosenDirName + ".overwatch.log";
-    QFile logFile(logPath);
-    logFile.open(QIODevice::WriteOnly);
-    QTextStream output(&logFile);
-
-    start = this->CollectedEvents.cbegin();
-
-    while (start != finish) {
-        output << start->fileName << ","
-               << start->action << ","
-               << (start->timestamp).toString() << "\n";
-        ++start;
-    }
-
-    logFile.close();
 }
+
+void DirectoryOverwatch::on_quit_clicked()
+{
+    exportLogToFile();
+}
+

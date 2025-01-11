@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QFileSystemWatcher>
 #include <QString>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -71,6 +72,7 @@ public:
 private slots:
     void on_chooseDirectory_clicked();
     void on_refresh_clicked();
+    void on_quit_clicked();
 
 private:
     Ui::DirectoryOverwatch *ui;
@@ -79,6 +81,10 @@ private:
     QString logPath;
     QString chosenDirName;
     QFileSystemWatcher overwatch;
+    QTimer trigger;
+    void exportLogToFile();
     void fileSystemInspection();
+    void loadLogFromFile();
+    void updateTable();
 };
 #endif // DIRECTORYOVERWATCH_H
