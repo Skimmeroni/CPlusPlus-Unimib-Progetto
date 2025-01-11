@@ -119,6 +119,19 @@ void DirectoryOverwatch::on_refresh_clicked()
     ui->tabledContent->setRowCount(n);
 
     for (unsigned int i = 0; i < n; ++i, ++start) {
+        QTableWidgetItem* flag = new QTableWidgetItem();
+        flag->setText("▪");
+        flag->setFont(QFont(this->font().family(), 36));
+
+        if (start->action == "Added") {
+            flag->setForeground(QBrush(Qt::red));
+        } else if (start->action == "Deleted") {
+            flag->setForeground(QBrush(Qt::green));
+        } else {
+            flag->setForeground(QBrush(Qt::blue));
+        }
+
+        ui->tabledContent->setItem(i, 0, flag);
         ui->tabledContent->setItem(i, 1, new QTableWidgetItem(start->fileName));
         ui->tabledContent->setItem(i, 2, new QTableWidgetItem(start->action));
         ui->tabledContent->setItem(i, 3, new QTableWidgetItem((start->timestamp).toString()));

@@ -61,44 +61,6 @@ struct PackedFile {
     }
 };
 
-/*
-struct CmpDecreasingFileName {
-    bool operator()(PackedFile a, PackedFile b) const {
-        return a.fileName <= b.fileName;
-    }
-};
-
-struct CmpIncreasingFileName {
-    bool operator()(PackedFile a, PackedFile b) const {
-        return a.fileName > b.fileName;
-    }
-};
-
-struct CmpDecreasingAction {
-    bool operator()(PackedFile a, PackedFile b) const {
-        return a.action <= b.action;
-    }
-};
-
-struct CmpIncreasingAction {
-    bool operator()(PackedFile a, PackedFile b) const {
-        return a.action > b.action;
-    }
-};
-
-struct CmpDecreasingTimestamp {
-    bool operator()(PackedFile a, PackedFile b) const {
-        return a.timestamp <= b.timestamp;
-    }
-};
-
-struct CmpIncreasingTimestamp {
-    bool operator()(PackedFile a, PackedFile b) const {
-        return a.timestamp > b.timestamp;
-    }
-};
-*/
-
 class DirectoryOverwatch : public QMainWindow
 {
     Q_OBJECT
