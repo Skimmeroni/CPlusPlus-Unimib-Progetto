@@ -3,11 +3,10 @@
 
 #include <QMainWindow>
 #include <QDateTime>
-#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
-// #include <QFileSystemWatcher>
+#include <QFileSystemWatcher>
 #include <QString>
 
 QT_BEGIN_NAMESPACE
@@ -79,7 +78,7 @@ private:
     QMap<QString, QDateTime> ChosenDirStatus;
     QString logPath;
     QString chosenDirName;
-    // QFileSystemWatcher overwatch;
+    QFileSystemWatcher overwatch;
     void fileSystemInspection();
 };
 #endif // DIRECTORYOVERWATCH_H

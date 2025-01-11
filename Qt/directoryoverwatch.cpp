@@ -8,15 +8,15 @@ DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
     , ChosenDirStatus(QMap<QString, QDateTime>())
     , logPath(QString())
     , chosenDirName(QString())
-    // , overwatch(QFileSystemWatcher())
+    , overwatch(QFileSystemWatcher())
 {
-    // QObject::connect(&(this->overwatch), SIGNAL(directoryChanged(QString)), this, SLOT(fileSystemInspection()));
+    QObject::connect(&(this->overwatch), &QFileSystemWatcher::directoryChanged,
+                     this, &DirectoryOverwatch::fileSystemInspection);
     ui->setupUi(this);
 }
 
 DirectoryOverwatch::~DirectoryOverwatch()
 {
-    // QObject::disconnect(&(this->overwatch), nullptr, nullptr, nullptr);
     delete ui;
 }
 
@@ -27,7 +27,6 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
 
     if (!d.isEmpty()) {
         this->ChosenDirStatus.clear();
-        // this->overwatch.removePath(chosenDirName);
         ui->tabledContent->setRowCount(0);
         ui->refresh->setEnabled(true);
 
@@ -46,8 +45,8 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
             ++start;
         }
 
+        this->overwatch.addPath(chosenDirName);
         ui->infoLabel->setText("Watching directory: " + chosenDirName);
-        // this->overwatch.addPath(chosenDirName);
     }
 }
 
@@ -111,7 +110,6 @@ void DirectoryOverwatch::fileSystemInspection()
 
 void DirectoryOverwatch::on_refresh_clicked()
 {
-    fileSystemInspection();
     QVector<PackedFile>::const_iterator start = this->CollectedEvents.cbegin();
     QVector<PackedFile>::const_iterator finish = this->CollectedEvents.cend();
 
@@ -124,9 +122,9 @@ void DirectoryOverwatch::on_refresh_clicked()
         flag->setFont(QFont(this->font().family(), 36));
 
         if (start->action == "Added") {
-            flag->setForeground(QBrush(Qt::red));
-        } else if (start->action == "Deleted") {
             flag->setForeground(QBrush(Qt::green));
+        } else if (start->action == "Deleted") {
+            flag->setForeground(QBrush(Qt::red));
         } else {
             flag->setForeground(QBrush(Qt::blue));
         }
