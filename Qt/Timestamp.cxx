@@ -1,3 +1,4 @@
+/*
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
@@ -92,6 +93,7 @@ static QVector<PackedFile> CollectedEvents(0);
 static QMap<QString, QDateTime> DirStatus;
 static const QString logPath = "/home/shania/Documents/log.csv";
 static const QString dirName = "/home/shania/Codebits/C++/";
+*/
 
 void exportLogToFile()
 {
@@ -133,6 +135,7 @@ void loadLogFromFile()
     logFile.close();
 }
 
+/*
 void fileSystemInspection()
 {
     // É una aggiunta
@@ -207,13 +210,14 @@ int main(int argc, char* argv[]) {
         ++start;
     }
 
-    // loadLogFromFile();
+    loadLogFromFile();
 
-    // QFileSystemWatcher overwatch;
-    // overwatch.addPath(dirName);
+    QFileSystemWatcher overwatch;
+    overwatch.addPath(dirName);
 
-    // fileSystemInspection();
-    // exportLogToFile();
+    fileSystemInspection();
+    exportLogToFile();
 
 	return a.exec();
 }
+*/

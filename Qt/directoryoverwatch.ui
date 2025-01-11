@@ -26,7 +26,7 @@
    <string>DirectoryOverwatch</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QTableWidget" name="tabledContent">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -35,6 +35,29 @@
       <height>451</height>
      </rect>
     </property>
+    <property name="rowCount">
+     <number>0</number>
+    </property>
+    <column>
+     <property name="text">
+      <string/>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Filename</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Event</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Timestamp</string>
+     </property>
+    </column>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
@@ -47,9 +70,12 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="loadLog">
+      <widget class="QPushButton" name="refresh">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
-        <string>Load a log file</string>
+        <string>Refresh</string>
        </property>
       </widget>
      </item>
@@ -69,7 +95,7 @@
      <item>
       <widget class="QPushButton" name="chooseDirectory">
        <property name="text">
-        <string>Open</string>
+        <string>👁️  Open</string>
        </property>
       </widget>
      </item>
@@ -89,7 +115,7 @@
      <item>
       <widget class="QPushButton" name="quit">
        <property name="text">
-        <string>Quit</string>
+        <string>🛇  Quit</string>
        </property>
       </widget>
      </item>
