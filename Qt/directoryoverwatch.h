@@ -16,6 +16,8 @@ class DirectoryOverwatch;
 }
 QT_END_NAMESPACE
 
+// Data structure that holds a file that was modified,
+// what happened and when
 struct PackedFile {
     QString fileName;
     QString action;

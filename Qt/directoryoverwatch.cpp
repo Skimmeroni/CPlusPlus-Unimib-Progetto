@@ -10,8 +10,11 @@ DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
     , overwatch(QFileSystemWatcher())
     , trigger(QTimer())
 {
+    // Whenever the watcher detects a change, take a look
     QObject::connect(&(this->overwatch), &QFileSystemWatcher::directoryChanged,
                      this, &DirectoryOverwatch::fileSystemInspection);
+
+    // Update the table every 3 seconds
     QObject::connect(&(this->trigger), &QTimer::timeout,
                      this, &DirectoryOverwatch::updateTable);
     ui->setupUi(this);
@@ -23,6 +26,7 @@ DirectoryOverwatch::~DirectoryOverwatch()
     delete ui;
 }
 
+// Reset everything 
 void DirectoryOverwatch::resetStatus()
 {
     this->ChosenDirStatus.clear();
@@ -36,9 +40,11 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
     QString d = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home",
                                                   QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
+    // If 'cancel' was clicked, do nothing
     if (!d.isEmpty()) {
         this->resetStatus();
 
+	// Add trailing '/'
         this->chosenDirName = d + "/";
         QDir theDir(chosenDirName);
         QStringList DirContent = theDir.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
@@ -46,6 +52,7 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
         QStringList::const_iterator start = DirContent.cbegin();
         QStringList::const_iterator finish = DirContent.cend();
 
+	// Add all directories to the list
         while (start != finish) {
             QString thisFile = *start;
             QDateTime lastModified = QFileInfo(chosenDirName + thisFile).lastModified();
@@ -56,6 +63,7 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
         this->overwatch.addPath(chosenDirName);
         ui->infoLabel->setText("Watching directory: " + chosenDirName);
 
+	// If a log file is found, load it
         QString logPath = this->chosenDirName + ".overwatch.log";
         if (QFileInfo(logPath).exists()) {
             this->loadLogFromFile();
@@ -151,6 +159,7 @@ void DirectoryOverwatch::detectModified()
 
 void DirectoryOverwatch::fileSystemInspection()
 {
+    // Detect which kind of event
     this->detectAdded();
     this->detectDeleted();
     this->detectModified();
