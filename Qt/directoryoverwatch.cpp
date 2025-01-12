@@ -4,7 +4,7 @@
 DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::DirectoryOverwatch)
-    , CollectedEvents(QVector<PackedFile>(0))
+    , PendingEvents(QVector<PackedFile>(0))
     , ChosenDirStatus(QMap<QString, QDateTime>())
     , chosenDirName(QString())
     , overwatch(QFileSystemWatcher())
@@ -30,7 +30,7 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
 
     if (!d.isEmpty()) {
         this->ChosenDirStatus.clear();
-        this->CollectedEvents.clear();
+        this->PendingEvents.clear();
         ui->tabledContent->clearContents();
         ui->tabledContent->setRowCount(0);
         ui->refresh->setEnabled(true);
@@ -76,7 +76,7 @@ void DirectoryOverwatch::loadLogFromFile()
         QDateTime c = QDateTime::fromString(thisLineTokens[2]);
 
         PackedFile thisEvent(a, b, c);
-        this->CollectedEvents.push_back(thisEvent);
+        this->PendingEvents.push_back(thisEvent);
     }
 
     logFile.close();
@@ -96,7 +96,7 @@ void DirectoryOverwatch::fileSystemInspection()
         if (this->ChosenDirStatus.count(thisFile) <= 0) {
             QDateTime lastModified = QFileInfo(this->chosenDirName + thisFile).lastModified();
             PackedFile p(thisFile, "Added", lastModified);
-            this->CollectedEvents.push_back(p);
+            this->PendingEvents.push_back(p);
             this->ChosenDirStatus[thisFile] = lastModified;
             break;
         }
@@ -112,7 +112,7 @@ void DirectoryOverwatch::fileSystemInspection()
         if (!QFileInfo(this->chosenDirName + thisFile).exists()) {
             QDateTime lastModified = start_2->second;
             PackedFile p(thisFile, "Deleted", lastModified);
-            this->CollectedEvents.push_back(p);
+            this->PendingEvents.push_back(p);
             this->ChosenDirStatus.remove(start_2->first);
             break;
         }
@@ -131,7 +131,7 @@ void DirectoryOverwatch::fileSystemInspection()
 
             if (timestampInTheMap != timestampInTheDir) {
                 PackedFile p(thisFile, "Modified", timestampInTheDir);
-                this->CollectedEvents.push_back(p);
+                this->PendingEvents.push_back(p);
                 this->ChosenDirStatus[thisFile] = timestampInTheDir;
                 break;
             }
@@ -142,22 +142,20 @@ void DirectoryOverwatch::fileSystemInspection()
 
 void DirectoryOverwatch::exportLogToFile()
 {
+
     QString logPath = this->chosenDirName + ".overwatch.log";
     QFile logFile(logPath);
     logFile.open(QIODevice::WriteOnly);
     QTextStream output(&logFile);
 
-    QVector<PackedFile>::const_iterator start = this->CollectedEvents.cbegin();
-    QVector<PackedFile>::const_iterator finish = this->CollectedEvents.cend();
-
-    while (start != finish) {
-        output << start->fileName << ","
-               << start->action << ","
-               << (start->timestamp).toString() << "\n";
-        ++start;
+    for (int i = 0; i < ui->tabledContent->rowCount(); ++i) {
+        output << ui->tabledContent->item(i, 1)->text() << ","
+               << ui->tabledContent->item(i, 2)->text() << ","
+               << ui->tabledContent->item(i, 3)->text() << "\n";
     }
 
     logFile.close();
+
 }
 
 void DirectoryOverwatch::on_refresh_clicked()
@@ -167,14 +165,14 @@ void DirectoryOverwatch::on_refresh_clicked()
 
 void DirectoryOverwatch::updateTable()
 {
-    QVector<PackedFile>::const_iterator start = this->CollectedEvents.cbegin();
-    QVector<PackedFile>::const_iterator finish = this->CollectedEvents.cend();
+    QVector<PackedFile>::const_iterator start = this->PendingEvents.cbegin();
+    QVector<PackedFile>::const_iterator finish = this->PendingEvents.cend();
 
-    unsigned int n = static_cast<unsigned int>(std::distance(start, finish));
-    ui->tabledContent->clearContents();
-    ui->tabledContent->setRowCount(n);
+    int n = static_cast<int>(std::distance(start, finish));
+    int previousLastRow = ui->tabledContent->rowCount();
+    ui->tabledContent->setRowCount(previousLastRow + n);
 
-    for (unsigned int i = 0; i < n; ++i, ++start) {
+    while (start != finish) {
         QTableWidgetItem* flag = new QTableWidgetItem();
         flag->setText("▪");
         flag->setFont(QFont(this->font().family(), 36));
@@ -187,11 +185,16 @@ void DirectoryOverwatch::updateTable()
             flag->setForeground(QBrush(Qt::blue));
         }
 
-        ui->tabledContent->setItem(i, 0, flag);
-        ui->tabledContent->setItem(i, 1, new QTableWidgetItem(start->fileName));
-        ui->tabledContent->setItem(i, 2, new QTableWidgetItem(start->action));
-        ui->tabledContent->setItem(i, 3, new QTableWidgetItem((start->timestamp).toString()));
+        ui->tabledContent->setItem(previousLastRow, 0, flag);
+        ui->tabledContent->setItem(previousLastRow, 1, new QTableWidgetItem(start->fileName));
+        ui->tabledContent->setItem(previousLastRow, 2, new QTableWidgetItem(start->action));
+        ui->tabledContent->setItem(previousLastRow, 3, new QTableWidgetItem((start->timestamp).toString()));
+
+        ++previousLastRow;
+        ++start;
     }
+
+    this->PendingEvents.clear();
 }
 
 void DirectoryOverwatch::on_quit_clicked()

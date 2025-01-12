@@ -76,7 +76,7 @@ private slots:
 
 private:
     Ui::DirectoryOverwatch *ui;
-    QVector<PackedFile> CollectedEvents;
+    QVector<PackedFile> PendingEvents;
     QMap<QString, QDateTime> ChosenDirStatus;
     QString logPath;
     QString chosenDirName;
