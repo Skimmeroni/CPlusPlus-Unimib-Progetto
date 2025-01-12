@@ -16,7 +16,6 @@
 
 struct Maximum_size_reached {};
 struct Minimum_size_reached {};
-struct Item_out_of_bounds {};
 
 /**
 	@brief Classe Stack
