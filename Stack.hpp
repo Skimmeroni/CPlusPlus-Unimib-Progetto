@@ -408,42 +408,11 @@ public:
 		@pre top_pos < maximum_size
 	*/
 
-	item_type get_size() const
+	item_type size() const
 	{
 		assert(top_pos < maximum_size);
 
 		return maximum_size;
-	}
-
-	/**
-		@brief Set size
-
-		Metodo che permette di modificare la dimensione massima
-		dello stack. Se la dimensione é insufficiente a contenere
-		gli elementi giá presenti, viene restituita una eccezione.
-
-		@param size la nuova dimensione
-
-		@pre top_pos < maximum_size
-
-		@post maximum_size == size
-
-		@throw Maximum_size_reached se la nuova dimensione é insufficiente
-	*/
-
-	void set_size(const item_type& size)
-	{
-		assert(top_pos < maximum_size);
-
-		if (size <= top_pos + 1) {
-			throw Maximum_size_reached();
-		}
-
-		Stack Tmp(size);
-		Tmp.load(this->begin(), this->end());
-
-		std::swap(this->Items, Tmp.Items);
-		std::swap(this->maximum_size, Tmp.maximum_size);
 	}
 
 	/**
@@ -846,7 +815,7 @@ std::ostream& operator<<(std::ostream& os, const Stack<T>& stack)
 		start++;
 	}
 
-	for (typename Stack<T>::item_type i = stack.head() + 1; i < stack.get_size(); ++i) {
+	for (typename Stack<T>::item_type i = stack.head() + 1; i < stack.size(); ++i) {
 		os << "[] ";
 	}
 	os << "}" << std::endl;

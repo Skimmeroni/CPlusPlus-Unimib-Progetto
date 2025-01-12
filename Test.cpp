@@ -43,7 +43,7 @@ void test_for_empty_stack()
 	std::cout << std::endl;
 
 	Stack<int> a;
-	assert(a.get_size() == 0);
+	assert(a.size() == 0);
 	assert(a.head() == -1);
 	std::cout << a;
 
@@ -55,7 +55,7 @@ void test_for_empty_stack()
 	}
 
 	Stack<Person> b;
-	assert(b.get_size() == 0);
+	assert(b.size() == 0);
 	assert(b.head() == -1);
 
 	try {    // Genera un'eccezione, va gestita
@@ -72,22 +72,22 @@ void test_for_full_stack()
 	std::cout << std::endl;
 
 	Stack<int> a(3);
-	assert(a.get_size() == 3);
+	assert(a.size() == 3);
 	assert(a.head() == -1);
 	std::cout << a;
 
 	a.push(1);	 // NON genera un'eccezione, non serve gestire
-	assert(a.get_size() == 3);
+	assert(a.size() == 3);
 	assert(a.head() == 0);
 	std::cout << a;
 
 	a.push(2);   // NON genera un'eccezione, non serve gestire
-	assert(a.get_size() == 3);
+	assert(a.size() == 3);
 	assert(a.head() == 1);
 	std::cout << a;
 
 	a.push(3); // NON genera un'eccezione, non serve gestire
-	assert(a.get_size() == 3);
+	assert(a.size() == 3);
 	assert(a.head() == 2);
 	std::cout << a;
 
@@ -97,7 +97,7 @@ void test_for_full_stack()
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
-	assert(a.get_size() == 3);
+	assert(a.size() == 3);
 	assert(a.head() == 2);
 	std::cout << a;
 }
@@ -108,42 +108,42 @@ void test_for_push_pop()
 	std::cout << std::endl;
 
 	Stack<unsigned int> a(10);
-	assert(a.get_size() == 10);
+	assert(a.size() == 10);
 	assert(a.head() == -1);
 	std::cout << a;
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {    
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {    
 		a.push(i);
 	}
-	assert(a.get_size() == 10);
+	assert(a.size() == 10);
 	assert(a.head() == 9);
 	std::cout << a;
 
 	for (unsigned int i = 0; i < 3; ++i) {
 		a.pop();
 	}
-	assert(a.get_size() == 10);
+	assert(a.size() == 10);
 	assert(a.head() == 6);
 	std::cout << a;
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()) - 3; ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()) - 3; ++i) {
 		a.pop();
 	}
-	assert(a.get_size() == 10);
+	assert(a.size() == 10);
 	assert(a.head() == -1);
 	std::cout << a;
 
 	for (unsigned int i = 0; i < 2; ++i) {
 			a.push(i);
 	}
-	assert(a.get_size() == 10);
+	assert(a.size() == 10);
 	assert(a.head() == 1);
 	std::cout << a;
 
 	for (unsigned int i = 2; i < 6; ++i) {
 			a.push(i);
 	}
-	assert(a.get_size() == 10);
+	assert(a.size() == 10);
 	assert(a.head() == 5);
 	std::cout << a;
 }
@@ -154,10 +154,10 @@ void test_for_clear()
 	std::cout << std::endl;
 
 	Stack<unsigned int> a(5);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
 			a.push(100);
 	}
-	assert(a.get_size() == 5);
+	assert(a.size() == 5);
 	assert(a.head() == 4);
 	std::cout << a;
 
@@ -170,7 +170,7 @@ void test_for_clear()
 	}
 
 	a.clear();
-	assert(a.get_size() == 5);
+	assert(a.size() == 5);
 	assert(a.head() == -1);
 	std::cout << a;
 
@@ -180,7 +180,7 @@ void test_for_clear()
 	b.push(Person("Charlie", "Cedar", 30, true));
 	b.push(Person("Daniel", "Dogwood", 40, false));
 	b.push(Person("Eliza", "Elm", 50, true));
-	assert(b.get_size() == 5);
+	assert(b.size() == 5);
 	assert(b.head() == 4);
 	std::cout << b;
 
@@ -188,7 +188,7 @@ void test_for_clear()
 	Stack<Person>::const_iterator b_e = b.end();
 
 	b.clear();
-	assert(b.get_size() == 5);
+	assert(b.size() == 5);
 	assert(b.head() == -1);
 	std::cout << b;
 }
@@ -199,11 +199,11 @@ void test_for_copy_constructor()
 	std::cout << std::endl;
 
 	Stack<int> a(9);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
 			a.push(81);
 	}
 	Stack<int> b(a);
-	assert(b.get_size() == 9);
+	assert(b.size() == 9);
 	assert(b.head() == 8);
 	std::cout << b;
 
@@ -212,7 +212,7 @@ void test_for_copy_constructor()
 	c.push(Person("Brian", "Bloom", 42, false));
 	c.push(Person("Charlotte", "Clover", 36, true));
 	Stack<Person> d(c);
-	assert(d.get_size() == 3);
+	assert(d.size() == 3);
 	assert(d.head() == 2);
 	std::cout << d;
 }
@@ -223,7 +223,7 @@ void test_for_assignment()
 	std::cout << std::endl;
 
 	Stack<int> a(12);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
 		a.push(0);
 	}
 	Stack<int> b;
@@ -237,7 +237,7 @@ void test_for_assignment()
 	c.push(Person("Daisy", "Dandelion", 19, false));
 	Stack<Person> d;
 	d = c;
-	assert(d.get_size() == 4);
+	assert(d.size() == 4);
 	assert(d.head() == 3);
 	std::cout << d;
 }
@@ -248,7 +248,7 @@ void test_for_filter_out()
 	std::cout << std::endl;
 
 	Stack<unsigned int> a(10);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
 			a.push(i);
 	}
 	std::cout << a;
@@ -352,7 +352,7 @@ void test_for_iterators()
 	std::cout << std::endl;
 
 	Stack<int> a(6);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.size()); ++i) {
 			a.push(0 + i);
 	}
 
