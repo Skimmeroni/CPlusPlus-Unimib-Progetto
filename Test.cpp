@@ -1,6 +1,20 @@
+/**
+	@file Test.cpp
+
+	@brief File sorgente dei test per il progetto
+
+	File di definizioni dei test per il progetto, contenente
+	le implementazioni delle funzioni di test e dei tipi di
+	dato in queste usate
+*/
+
 #include "Stack.hpp"
 #include "Test.h"
 #include <array>
+
+/**
+	Metodi fondamentali per la classe Person
+*/
 
 Person::Person()
 : name(""), surname(""), age(0), is_happy(false)
@@ -28,6 +42,10 @@ Person::Person(const Person& other)
 	this->is_happy = other.is_happy;
 }
 
+/**
+	Ridefinizione dell'operatore << per un oggetto Person
+*/
+
 std::ostream& operator<<(std::ostream& os, const Person& p)
 {
 	os << "{" << p.name << ", "
@@ -36,6 +54,10 @@ std::ostream& operator<<(std::ostream& os, const Person& p)
 	          p.is_happy << "}";
   return os;
 }
+
+/**
+	Test di manipolazione di uno stack vuoto
+*/
 
 void test_for_empty_stack()
 {
@@ -65,6 +87,10 @@ void test_for_empty_stack()
 		std::cerr << "Lo stack é vuoto!" << std::endl;
 	}
 }
+
+/**
+	Test di manipolazione di uno stack pieno
+*/
 
 void test_for_full_stack()
 {
@@ -101,6 +127,10 @@ void test_for_full_stack()
 	assert(a.head() == 2);
 	std::cout << a;
 }
+
+/**
+	Test di carico e scarico di uno stack
+*/
 
 void test_for_push_pop()
 {
@@ -148,6 +178,10 @@ void test_for_push_pop()
 	std::cout << a;
 }
 
+/**
+	Test di svuotamento dello stack
+*/
+
 void test_for_clear()
 {
 	std::cout << "*** Svuotamento di uno stack ***" << std::endl;
@@ -193,6 +227,10 @@ void test_for_clear()
 	std::cout << b;
 }
 
+/**
+	Test sul copy constructor
+*/
+
 void test_for_copy_constructor()
 {
 	std::cout << "*** Costruttore di copia ***" << std::endl;
@@ -216,6 +254,10 @@ void test_for_copy_constructor()
 	assert(d.head() == 2);
 	std::cout << d;
 }
+
+/**
+	Test sull'assegnamento
+*/
 
 void test_for_assignment()
 {
@@ -241,6 +283,10 @@ void test_for_assignment()
 	assert(d.head() == 3);
 	std::cout << d;
 }
+
+/**
+	Test sul metodo di classe filter_out
+*/
 
 void test_for_filter_out()
 {
@@ -274,6 +320,10 @@ void test_for_filter_out()
 	std::cout << d;
 }
 
+/**
+	Test sulla funzione pubblica transform
+*/
+
 void test_for_transform()
 {
 	std::cout << "*** Metodo di trasformazione ***" << std::endl;
@@ -301,6 +351,10 @@ void test_for_transform()
 	transform<Person, Modifier2>(b, mod2);
 	std::cout << b;
 }
+
+/**
+	Test sul riempimento di uno stack mediante iteratori
+*/
 
 void test_for_loading_through_iterators()
 {
@@ -345,6 +399,10 @@ void test_for_loading_through_iterators()
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
 }
+
+/**
+	Test sugli iteratori offerti dalla classe
+*/
 
 void test_for_iterators()
 {

@@ -1,3 +1,11 @@
+/**
+	@file Main.cpp
+
+	@brief File principale del progetto
+
+	File principale del progetto, che chiama
+	tutte le funzioni di test
+*/
 #include "Test.h"
 
 int main()
