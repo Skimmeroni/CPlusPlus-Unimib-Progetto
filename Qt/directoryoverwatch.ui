@@ -112,6 +112,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="save">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>↺ Save log</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>

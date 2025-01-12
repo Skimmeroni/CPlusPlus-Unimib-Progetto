@@ -75,6 +75,8 @@ private slots:
     void on_chooseDirectory_clicked();
     void on_quit_clicked();
 
+    void on_save_clicked();
+
 private:
     Ui::DirectoryOverwatch *ui;
     QVector<PackedFile> PendingEvents;

@@ -71,6 +71,7 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
 
         this->updateTable();
         this->trigger.start(3000);
+        ui->save->setEnabled(true);
     }
 }
 
@@ -221,6 +222,13 @@ void DirectoryOverwatch::updateTable()
 }
 
 void DirectoryOverwatch::on_quit_clicked()
+{
+    ui->tabledContent->sortItems(3, Qt::AscendingOrder);
+    this->exportLogToFile();
+}
+
+
+void DirectoryOverwatch::on_save_clicked()
 {
     ui->tabledContent->sortItems(3, Qt::AscendingOrder);
     this->exportLogToFile();
