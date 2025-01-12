@@ -177,41 +177,73 @@ void test_for_clear()
 	assert(a.get_size() == 5);
 	assert(a.head() == -1);
 	std::cout << a;
+
+	Stack<Person> b(5);
+	b.push(Person("Alice", "Aspen", 10, true));
+	b.push(Person("Bob", "Birch", 20, false));
+	b.push(Person("Charlie", "Cedar", 30, true));
+	b.push(Person("Daniel", "Dogwood", 40, false));
+	b.push(Person("Eliza", "Elm", 50, true));
+	assert(b.get_size() == 5);
+	assert(b.head() == 4);
+	std::cout << b;
+
+	Stack<Person>::const_iterator b_s = b.begin();
+	Stack<Person>::const_iterator b_e = b.end();
+
+	b.clear();
+	assert(b.get_size() == 5);
+	assert(b.head() == -1);
+	std::cout << b;
 }
 
 void test_for_copy_constructor()
 {
-	/* Costruttore di copia */
+	std::cout << "*** Costruttore di copia ***" << std::endl;
+	std::cout << std::endl;
+
 	Stack<int> a(9);
-	unsigned int s = static_cast<unsigned int>(a.get_size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
 			a.push(81);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
 	}
-	Stack<int> b = a;
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	Stack<int> b(a);
+	assert(b.get_size() == 9);
+	assert(b.head() == 8);
+	std::cout << b;
+
+	Stack<Person> c(3);
+	c.push(Person("Amelia", "Azalea", 27, true));
+	c.push(Person("Brian", "Bloom", 42, false));
+	c.push(Person("Charlotte", "Clover", 36, true));
+	Stack<Person> d(c);
+	assert(d.get_size() == 3);
+	assert(d.head() == 2);
+	std::cout << d;
 }
 
 void test_for_assignment()
 {
-	/* Assegnamento */
+	std::cout << "*** Operatore di assegnamento ***" << std::endl;
+	std::cout << std::endl;
+
 	Stack<int> a(12);
-	unsigned int s = static_cast<unsigned int>(a.get_size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
-			a.push(0);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+		a.push(0);
 	}
 	Stack<int> b;
 	b = a;
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	std::cout << b;
+
+	Stack<Person> c(4);
+	c.push(Person("Andrew", "Aloe", 31, true));
+	c.push(Person("Bella", "Blossom", 24, false));
+	c.push(Person("Charles", "Cornflower", 47, true));
+	c.push(Person("Daisy", "Dandelion", 19, false));
+	Stack<Person> d;
+	d = c;
+	assert(d.get_size() == 4);
+	assert(d.head() == 3);
+	std::cout << d;
 }
 
 void test_for_filter_out()
