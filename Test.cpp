@@ -308,70 +308,52 @@ void test_for_transform()
 
 void test_for_loading_through_iterators()
 {
-	/* Caricamento mediante coppia di iteratori */
-    std::array<int, 5> arr = {10, 20, 30, 40, 50};
-	std::array<int, 5>::iterator it1 = arr.begin();
-	std::array<int, 5>::iterator it2 = arr.end();
+	std::cout << "*** Caricamento mediante coppia di iteratori ***" << std::endl;
+	std::cout << std::endl;
 
+	std::array<int, 5> arr = {10, 20, 30, 40, 50};
 	Stack<int> a(10);
-	a.load<std::array<int, 5>::iterator>(it1, it2);
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
-	a.load<std::array<int, 5>::iterator>(it1, it2);
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
-	try {
-		a.load<std::array<int, 5>::iterator>(it1, it2);
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
 
-	a.set_size(15);
+	a.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
 	std::cout << a;
-	try {
-		a.load<std::array<int, 5>::iterator>(it1, it2);
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
+
+	a.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
 	std::cout << a;
+
 	try {
-		a.set_size(14);
+		a.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
 	}
 	catch (Maximum_size_reached) {
 		std::cerr << "Lo stack é pieno!" << std::endl;
 	}
 
 	a.clear();
-	std::cout << a;
-	try {
-		a.load<std::array<int, 5>::iterator>(it1, it2);
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
+	a.load<std::array<int, 5>::iterator>(arr.begin(), arr.begin());
 	std::cout << a;
 
 	a.clear();
-	a.load<std::array<int, 5>::iterator>(it1, it1);
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
-
-	a.clear();
-	a.load<std::array<int, 5>::iterator>(it2, it2);
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
+	a.load<std::array<int, 5>::iterator>(arr.end(), arr.end());
+	std::cout << a;
 
 	int arrr[5] = {10, 20, 30, 40, 50};
-	int* itt1 = &arrr[0];
-	int* itt2 = &arrr[4];
-	Stack<int> b(itt1, itt2);
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	Stack<int> b(arrr, arrr + 5);
+	std::cout << b;
 
 	b.clear();
-	b.load<std::array<int, 5>::iterator>(itt1, itt1);
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	b.load<std::array<int, 5>::iterator>(arrr, arrr);
+	std::cout << b;
 
 	b.clear();
-	b.load<std::array<int, 5>::iterator>(itt1, itt2);
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	b.load<std::array<int, 5>::iterator>(arrr + 5, arrr + 5);
+	std::cout << b;
+
+	std::array<Person, 5> People = {Person("Adam", "Amaryllis", 54, true),
+																	Person("Bianca", "Bellflower", 23, false),
+																	Person("Caleb", "Cantaloupe", 31, true),
+																	Person("Diana", "Dahlia", 48, false),
+																	Person("Frank", "Fig", 25, true)};
+	Stack<Person> c(People.begin(), People.end());
+	std::cout << c;
 }
 
 void test_for_iterators()
