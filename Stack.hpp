@@ -522,8 +522,8 @@ public:
 		Metodo che prende in input una coppia di iteratori, uno che
 		punta all'inizio di una sequenza e uno che punta alla fine
 		di una sequenza, e che riempie uno stack con i valori nel
-		mezzo. Se la dimensione é insufficiente, viene lanciata
-		una eccezione
+		mezzo. Se lo stack conteneva già dei dati, vengono rimossi.
+		Se la dimensione é insufficiente, viene lanciata una eccezione
 
 		@param it_s un iteratore che punta all'inizio della sequenza
 		@param it_e un iteratore che punta alla fine della sequenza
@@ -549,9 +549,11 @@ public:
 			temp++;
 		}
 
-		if (maximum_size - (top_pos + 1) < d) {
+		if (maximum_size < d) {
 			throw Maximum_size_reached();
 		}
+
+		clear();
 
 		while (it_s != it_e) {
 			push(static_cast<T>(*it_s));

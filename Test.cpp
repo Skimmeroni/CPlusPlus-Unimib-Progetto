@@ -317,21 +317,9 @@ void test_for_loading_through_iterators()
 	a.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
 	std::cout << a;
 
-	a.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
-	std::cout << a;
-
-	try {
-		a.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
-
-	a.clear();
 	a.load<std::array<int, 5>::iterator>(arr.begin(), arr.begin());
 	std::cout << a;
 
-	a.clear();
 	a.load<std::array<int, 5>::iterator>(arr.end(), arr.end());
 	std::cout << a;
 
@@ -339,11 +327,9 @@ void test_for_loading_through_iterators()
 	Stack<int> b(arrr, arrr + 5);
 	std::cout << b;
 
-	b.clear();
 	b.load<std::array<int, 5>::iterator>(arrr, arrr);
 	std::cout << b;
 
-	b.clear();
 	b.load<std::array<int, 5>::iterator>(arrr + 5, arrr + 5);
 	std::cout << b;
 
@@ -354,6 +340,14 @@ void test_for_loading_through_iterators()
 																	Person("Frank", "Fig", 25, true)};
 	Stack<Person> c(People.begin(), People.end());
 	std::cout << c;
+
+	Stack<int> d;
+	try {
+		d.load<std::array<int, 5>::iterator>(arr.begin(), arr.end());
+	}
+	catch (Maximum_size_reached) {
+		std::cerr << "Lo stack é pieno!" << std::endl;
+	}
 }
 
 void test_for_iterators()
