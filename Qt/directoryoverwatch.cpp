@@ -14,13 +14,23 @@ DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
                      this, &DirectoryOverwatch::fileSystemInspection);
     QObject::connect(&(this->trigger), &QTimer::timeout,
                      this, &DirectoryOverwatch::updateTable);
-    this->trigger.start(3000);
     ui->setupUi(this);
+    // QObject::connect(&(ui->tabledContent->horizontalHeader()), &QHeaderView::sectionClicked,
+    //                 this, &DirectoryOverwatch::saveChosenSort);
 }
 
 DirectoryOverwatch::~DirectoryOverwatch()
 {
+    this->resetStatus();
     delete ui;
+}
+
+void DirectoryOverwatch::resetStatus()
+{
+    this->ChosenDirStatus.clear();
+    this->PendingEvents.clear();
+    ui->tabledContent->clearContents();
+    ui->tabledContent->setRowCount(0);
 }
 
 void DirectoryOverwatch::on_chooseDirectory_clicked()
@@ -29,13 +39,9 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
                                                   QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     if (!d.isEmpty()) {
-        this->ChosenDirStatus.clear();
-        this->PendingEvents.clear();
-        ui->tabledContent->clearContents();
-        ui->tabledContent->setRowCount(0);
+        this->resetStatus();
 
         this->chosenDirName = d + "/";
-
         QDir theDir(chosenDirName);
         QStringList DirContent = theDir.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
 
@@ -54,10 +60,11 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
 
         QString logPath = this->chosenDirName + ".overwatch.log";
         if (QFileInfo(logPath).exists()) {
-            loadLogFromFile();
+            this->loadLogFromFile();
         }
 
-        updateTable();
+        this->updateTable();
+        this->trigger.start(3000);
     }
 }
 
@@ -83,9 +90,8 @@ void DirectoryOverwatch::loadLogFromFile()
     logFile.close();
 }
 
-void DirectoryOverwatch::fileSystemInspection()
+void DirectoryOverwatch::detectAdded()
 {
-    // É una aggiunta
     QDir chosenDirectory(this->chosenDirName);
     QStringList DirContent = chosenDirectory.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
 
@@ -103,8 +109,10 @@ void DirectoryOverwatch::fileSystemInspection()
         }
         ++start_1;
     }
+}
 
-    // É una rimozione
+void DirectoryOverwatch::detectDeleted()
+{
     QMap<QString, QDateTime>::key_value_iterator start_2 = this->ChosenDirStatus.keyValueBegin();
     QMap<QString, QDateTime>::key_value_iterator finish_2 = this->ChosenDirStatus.keyValueEnd();
 
@@ -119,8 +127,10 @@ void DirectoryOverwatch::fileSystemInspection()
         }
         ++start_2;
     }
+}
 
-    // É una modifica
+void DirectoryOverwatch::detectModified()
+{
     QMap<QString, QDateTime>::key_value_iterator start_3 = this->ChosenDirStatus.keyValueBegin();
     QMap<QString, QDateTime>::key_value_iterator finish_3 = this->ChosenDirStatus.keyValueEnd();
 
@@ -139,6 +149,13 @@ void DirectoryOverwatch::fileSystemInspection()
         }
         ++start_3;
     }
+}
+
+void DirectoryOverwatch::fileSystemInspection()
+{
+    this->detectAdded();
+    this->detectDeleted();
+    this->detectModified();
 }
 
 void DirectoryOverwatch::exportLogToFile()
@@ -191,10 +208,11 @@ void DirectoryOverwatch::updateTable()
     }
 
     this->PendingEvents.clear();
+    // ui->tabledContent->sortItems(3, Qt::AscendingOrder);
 }
 
 void DirectoryOverwatch::on_quit_clicked()
 {
-    exportLogToFile();
+    this->exportLogToFile();
 }
 

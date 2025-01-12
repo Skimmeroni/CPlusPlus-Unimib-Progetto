@@ -81,9 +81,13 @@ private:
     QString chosenDirName;
     QFileSystemWatcher overwatch;
     QTimer trigger;
+    void detectAdded();
+    void detectDeleted();
+    void detectModified();
     void exportLogToFile();
     void fileSystemInspection();
     void loadLogFromFile();
     void updateTable();
+    void resetStatus();
 };
 #endif // DIRECTORYOVERWATCH_H
