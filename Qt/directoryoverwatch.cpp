@@ -15,8 +15,6 @@ DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
     QObject::connect(&(this->trigger), &QTimer::timeout,
                      this, &DirectoryOverwatch::updateTable);
     ui->setupUi(this);
-    // QObject::connect(&(ui->tabledContent->horizontalHeader()), &QHeaderView::sectionClicked,
-    //                 this, &DirectoryOverwatch::saveChosenSort);
 }
 
 DirectoryOverwatch::~DirectoryOverwatch()
@@ -208,11 +206,14 @@ void DirectoryOverwatch::updateTable()
     }
 
     this->PendingEvents.clear();
-    // ui->tabledContent->sortItems(3, Qt::AscendingOrder);
+    if (n > 0) {
+        ui->tabledContent->sortItems(3, Qt::AscendingOrder);
+    }
 }
 
 void DirectoryOverwatch::on_quit_clicked()
 {
+    ui->tabledContent->sortItems(3, Qt::AscendingOrder);
     this->exportLogToFile();
 }
 
