@@ -1,10 +1,6 @@
 #include "Stack.hpp"
 #include "Test.h"
-#include <iostream>
 #include <array>
-#include <cassert>
-#include <cmath>
-#include <string>
 
 Person::Person()
 : name(""), surname(""), age(0), is_happy(false)
@@ -390,5 +386,3 @@ void test_for_iterators()
 		c_bitb++;
 	}
 }
-
-void test_square_brackets() {}

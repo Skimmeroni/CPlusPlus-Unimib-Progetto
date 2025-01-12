@@ -22,8 +22,5 @@ int main()
 	std::cout << std::endl;
 	test_for_iterators();
 	std::cout << std::endl;
-	test_square_brackets();
-	std::cout << std::endl;
-	// test_for_fancy_types();
 	return 0;
 }

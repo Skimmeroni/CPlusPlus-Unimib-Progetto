@@ -398,32 +398,6 @@ public:
 	}
 
 	/**
-		@brief Operatore []
-
-		Ritorna il valore di una cella dello stack, in sola
-		lettura. Se l'elemento é fuori dai limiti dello stack,
-		o se lo stack é vuoto, viene lanciata un'eccezione
-
-		@param index la posizione dello stack
-
-		@return il valore alla index-esima posizione
-
-		@pre top_pos < maximum_size
-
-		@throw Item_out_of_bounds se l'elemento é irraggiungibile
-	*/
-
-	const T& operator[](item_type index) const {
-		assert(top_pos < maximum_size);
-
-		if (stack_empty() || index < 0 || index > top_pos) {
-			throw Item_out_of_bounds();
-		}
-
-		return Items[index];
-	}
-
-	/**
 		@brief Get size
 
 		Metodo che restituisce la dimensione massima dello stack.

@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <iostream>
-#include <string>
 
 enum Color {Red, Green, Blue};
 
@@ -92,6 +91,5 @@ void test_for_filter_out();
 void test_for_transform();
 void test_for_loading_through_iterators();
 void test_for_iterators();
-void test_square_brackets();
 
 #endif
