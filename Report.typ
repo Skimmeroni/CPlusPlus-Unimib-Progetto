@@ -30,14 +30,6 @@ appello di Gennaio. Cosa contengono dei singoli file é riportato in
 eccezioni lanciate, le pre/post condizioni, ecc...) sono riportati
 nella documentazione generata mediante `doxygen`.
 
-I requisiti progettuali imprescindibili sono i seguenti:
-
-+ Non utilizzare costrutti avanzati dello standard C++11 e
-  seguenti, ad eccezione di `nullptr`;
-+ Non utilizzare una struttura dati a lista, quindi basata
-  su nodi e puntatori;
-+ Correttezza a discapito dell'efficienza.
-
 = Sintassi
 
 In linea con la sintassi in genere utilizzata nel codice C++, soprattutto
@@ -55,6 +47,20 @@ cui sono scritte le funzioni, vengono da
 #link("https://www.gnu.org/prep/standards/standards.html#Formatting").
 Altre idee vengono da
 #link("https://google.github.io/styleguide/cppguide.html#Formatting").
+
+= Makefile
+
+Il codice é compilabile mediante `Makefile`, che utilizza delle flag
+di base per istruire il compilatore nel mostrare quanti piú warning
+possibile. Per testare il codice é stato utilizzato `AddressSanitizer`,
+una funzionalitá presente nei moderni compilatori C++ che permette una
+ispezione approfondita della presenza di memory leak e altri errori
+nella gestione della memoria dinamica. I flag per attivare tale
+funzionalitá sono ancora presenti nel `Makefile`, ma sono disabilitati
+per una questione di compatibilitá, dato ché non tutti i compilatori
+lo supportano. Se lo si desidera, é comunque riattivabile. Il codice
+é stato comunque testato con `Valgrind`, che ha segnalato la totale
+assenza di memory leak.
 
 = Struttura dati
 
@@ -83,6 +89,17 @@ lo stesso tipo `item_type` (`int`). Questo permette, nonostante
 tecnicamente ci sia un uso della memoria meno efficiente, di
 risparmiare molte annose conversioni di tipo, che fra i due sono
 fatte molto di frequente.
+
+= Eccezioni
+
+La classe Stack utilizza estensivamente l'eccezione `std::bad_alloc`
+della libreria standard per segnalare la presenza di una allocazione
+di memoria fallita. É stata poi dotata di due eccezioni proprie,
+`Maximum_size_reached` e `Minimum_size_reached`, che rispettivamente
+segnalano l'aver raggiunto la massima/minima capienza dello stack e
+non é possibile proseguire oltre. Entrambe sono state implementate
+semplicemente come due `struct` vuote dato che non hanno particolari
+dati membro da fornire.
 
 = Costruttori
 
@@ -116,11 +133,7 @@ nell'implementazione dello stack della libreria standard del C++
 Oltre a questi metodi di base sono stati introdotti i seguenti metodi
 di supporto:
 
-- `operator[]`, che restituisce (se é entro il range) l'$i$-esimo
-  elemento dello stack, in sola lettura;
-- `get_size`, che restituisce la dimensione massima dello stack;
-- `set_size`, che aumenta o diminuisce (se possibile) la dimensione
-  massima dello stack;
+- `size`, che restituisce la dimensione massima dello stack;
 - `head`, che restituisce la posizione della cima dello stack;
 - `wipe`, che cancella il contenuto dello stack e lo ridimensiona a 0.
 
@@ -162,8 +175,7 @@ di una sequenza lunga $N$.
 
 Tecnicamente, gli elementi di uno stack ad eccezione di quello in cima
 non dovrebbero essere accessibili, ma il supporto agli iteratori era
-un requisito d'esame. Per lo stesso motivo, `operator[]` esiste ma non
-permette la modifica degli elementi.
+un requisito d'esame.
 
 = Funzioni globali
 
