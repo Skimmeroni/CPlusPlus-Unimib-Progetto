@@ -358,57 +358,43 @@ void test_for_loading_through_iterators()
 
 void test_for_iterators()
 {
-	/* Iteratori della classe */
+	std::cout << "*** Iteratori della classe ***" << std::endl;
+	std::cout << std::endl;
+
 	Stack<int> a(6);
-	unsigned int s = static_cast<unsigned int>(a.get_size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
-			a.push(85 + i);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
-	}
-	Stack<int>::iterator itb = a.begin();
-	*itb = 0;
-	Stack<int>::iterator ite = a.end();
-	while (itb != ite) {
-		std::cout << *itb << std::endl;
-		itb++;
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
+			a.push(0 + i);
 	}
 
+	Stack<int>::iterator itb = a.begin();
+	Stack<int>::iterator ite = a.end();
+	while (itb != ite) {
+		std::cout << ++(*itb) << " /// ";
+		itb++;
+	}
 	std::cout << std::endl;
 
 	Stack<int>::const_iterator c_itb = a.begin();
-	// *c_itb = 1;  Non é possibile!
+	// *c_itb = 1; Non é possibile!
 	Stack<int>::const_iterator c_ite = a.end();
 	while (c_itb != c_ite) {
-		std::cout << *c_itb << std::endl;
+		std::cout << *c_itb << " /// ";
 		c_itb++;
 	}
-}
+	std::cout << std::endl;
 
-void test_for_fancy_types()
-{
-	/* Datatype particolarmente convoluti */
-	Stack<double> a1(10);
-	Stack<long double> a2(10);
-	Stack<long long int> a3(10);
-	Stack<unsigned long int> a4(10);
-	Stack<unsigned char> a5(10);
-	Stack<int*> a6(10);
-	Stack<int**> a7(10);
-	Stack<bool***> a8(10);
-	Stack<char> a9(10);
-	Stack<char*> a10(10);
-	Stack<std::string> a11(10);
-	Stack<std::array<int, 5>> a12(10);
-	Stack<std::array<std::array<int, 5>, 5>> a13(10);
-	Stack<Stack<int>> a14(10);
-	Stack<std::array<Stack<std::array<int, 5>>, 5>> a15(10);
-	Stack<Color> a16(10);
-	Stack<Comparison> a17(10);
-	Stack<Person> a18(10);
+	Stack<Person> b(10);
+	b.push(Person("Angela", "Aloe", 39, true));
+	b.push(Person("Brent", "Bluebell", 27, false));
+	b.push(Person("Cynthia", "Coriander", 44, true));
+	b.push(Person("Damon", "Dogwood", 36, false));
+
+	Stack<Person>::const_iterator c_bitb = b.begin();
+	Stack<Person>::const_iterator c_bite = b.end();
+	while (c_bitb != c_bite) {
+		std::cout << *c_bitb << std::endl;
+		c_bitb++;
+	}
 }
 
 void test_square_brackets() {}
