@@ -248,90 +248,62 @@ void test_for_assignment()
 
 void test_for_filter_out()
 {
-	/* Filtering */
-	struct Comparison1 {
-		bool operator()(unsigned int n) const {
-			return n > 3;
-		}
-	};
-
-	struct Comparison2 {
-		bool operator()(unsigned int n) const {
-			return (n % 2) == 0;
-		}
-	};
-
-	struct Comparison3 {
-		bool operator()(unsigned int n) const {
-			return n > 100;
-		}
-	};
+	std::cout << "*** Metodo di filtraggio ***" << std::endl;
+	std::cout << std::endl;
 
 	Stack<unsigned int> a(10);
-	unsigned int s = static_cast<unsigned int>(a.get_size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
 			a.push(i);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
 	}
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
+	std::cout << a;
 
 	Comparison1 comp1;
 	Stack<unsigned int> b = a.filter_out<Comparison1>(comp1);
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	std::cout << b;
 
 	Comparison2 comp2;
 	Stack<unsigned int> c = a.filter_out<Comparison2>(comp2);
-	std::cout << c << "Dimensione: " << c.get_size() << std::endl;
+	std::cout << c;
+
+	Stack<Person> d(5);
+	d.push(Person("Alice", "Anemone", 34, true));
+	d.push(Person("Bradley", "Bamboo", 40, false));
+	d.push(Person("Catherine", "Cypress", 22, true));
+	d.push(Person("Dylan", "Delphinium", 60, false));
+	d.push(Person("Fiona", "Fern", 18, true));
+	std::cout << d;
 
 	Comparison3 comp3;
-	Stack<unsigned int> d = a.filter_out<Comparison3>(comp3);
-	std::cout << d << "Dimensione: " << d.get_size() << std::endl;
+	d = d.filter_out<Comparison3>(comp3);
+	std::cout << d;
 }
 
 void test_for_transform()
 {
-	/* Trasformazione */
-	struct Modifier1 {
-		int operator()(int n) const {
-			return n + 1;
-		}
-	};
-
-	struct Modifier2 {
-		int operator()(int n) const {
-			return static_cast<int>(sqrt(n));
-		}
-	};
+	std::cout << "*** Metodo di trasformazione ***" << std::endl;
+	std::cout << std::endl;
 
 	Stack<int> a(5);
-	unsigned int s = static_cast<unsigned int>(a.get_size());
-	for (unsigned int i = 0; i < s; ++i) {
-		try {
-			a.push(100);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
-	}
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
+	a.push(100);
+	a.push(200);
+	a.push(300);
+	a.push(400);
+	a.push(500);
+	std::cout << a;
 	Modifier1 mod1;
 	transform<int, Modifier1>(a, mod1);
-	std::cout << a << "Dimensione: " << a.get_size() << std::endl;
+	std::cout << a;
 
-	Stack<int> b(5);
-	b.push(100);
-	b.push(200);
-	b.push(300);
-	b.push(400);
-	b.push(500);
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	Stack<Person> b(5);
+	b.push(Person("Ava", "Aster", 26, true));
+	b.push(Person("Brandon", "Basil", 37, false));
+	b.push(Person("Clara", "Chrysanthemum", 45, true));
+	b.push(Person("Derek", "Daisy", 29, false));
+	b.push(Person("Emily", "Eucalyptus", 33, true));
+	std::cout << b;
 	Modifier2 mod2;
-	transform<int, Modifier2>(b, mod2);
-	std::cout << b << "Dimensione: " << b.get_size() << std::endl;
+	transform<Person, Modifier2>(b, mod2);
+	std::cout << b;
 }
 
 void test_for_loading_through_iterators()

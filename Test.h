@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
 
 enum Color {Red, Green, Blue};
 
@@ -58,20 +59,26 @@ struct Comparison2 {
 };
 
 struct Comparison3 {
-	bool operator()(unsigned int n) const {
-		return n > 100;
+	bool operator()(Person p) const {
+		return p.is_happy;
 	}
 };
 
 struct Modifier1 {
 	int operator()(int n) const {
-		return n + 1;
+		return static_cast<int>(sqrt(n));
 	}
 };
 
 struct Modifier2 {
-	int operator()(int n) const {
-		return static_cast<int>(sqrt(n));
+	Person operator()(Person p) const {
+		Person hexed(p);
+		hexed.name[0] = '?';
+		hexed.surname[0] = '?';
+		hexed.age *= 3;
+		hexed.is_happy = false;
+
+		return hexed;
 	}
 };
 

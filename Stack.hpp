@@ -612,8 +612,8 @@ public:
 		Stack S(this->maximum_size);
 
 		for (item_type i = 0; i <= this->top_pos; ++i) {
-			if (predicate(this->Items[i]) == true) {
-				S.push(Items[i]);
+			if (predicate(this->Items[i])) {
+				S.push(this->Items[i]);
 			}
 		}
 
