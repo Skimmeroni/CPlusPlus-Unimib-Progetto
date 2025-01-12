@@ -7,11 +7,37 @@
 enum Color {Red, Green, Blue};
 
 struct Person {
-	char* Name;
+	std::string name;
+	std::string surname;
 	unsigned int age;
-	bool is_married;
-	Person* best_friend;
+	bool is_happy;
+
+	Person();
+	Person(const std::string& name, const std::string& surname,
+	       const int& age, const bool& is_happy);
+	~Person();
+	Person(const Person& other);
+
+	void swap(Person& other)
+	{
+		std::swap(this->name, other.name);
+		std::swap(this->surname, other.surname);
+		std::swap(this->surname, other.surname);
+		std::swap(this->age, other.age);
+	}
+
+	Person& operator=(const Person& other)
+	{
+		if (this != &other) {
+			Person temp(other);
+			this->swap(temp);
+		}
+
+		return *this;
+	}
 };
+
+std::ostream& operator<<(std::ostream& os, const Person& u);
 
 struct Comparison {
 	bool operator()(int n) const {

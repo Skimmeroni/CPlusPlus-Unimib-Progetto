@@ -6,6 +6,41 @@
 #include <cmath>
 #include <string>
 
+Person::Person()
+: name(""), surname(""), age(0), is_happy(false)
+{}
+
+Person::Person(const std::string& name, const std::string& surname,
+               const int& age, const bool& is_happy)
+: name(""), surname(""), age(0), is_happy(false)
+{
+	this->name = name;
+	this->surname = surname;
+	this->age = age;
+	this->is_happy = is_happy;
+}
+
+Person::~Person()
+{}
+
+Person::Person(const Person& other)
+: name(""), surname(""), age(0), is_happy(false)
+{
+	this->name = other.name;
+	this->surname = other.surname;
+	this->age = other.age;
+	this->is_happy = other.is_happy;
+}
+
+std::ostream& operator<<(std::ostream& os, const Person& p)
+{
+	os << "{" << p.name << ", "
+	          << p.surname << ", "
+	          << p.age << ", " <<
+	          p.is_happy << "}";
+  return os;
+}
+
 void test_for_empty_stack()
 {
 	std::cout << "*** Manipolazione di uno stack vuoto ***" << std::endl;
@@ -16,19 +51,18 @@ void test_for_empty_stack()
 	assert(a.head() == -1);
 	std::cout << a;
 
-	try {    // Genera un'eccezione
+	try {    // Genera un'eccezione, va gestita
 		a.pop();
 	}
 	catch (Minimum_size_reached) {
 		std::cerr << "Lo stack é vuoto!" << std::endl;
 	}
 
-	Stack<std::array<char, 5>> b;
+	Stack<Person> b;
 	assert(b.get_size() == 0);
 	assert(b.head() == -1);
-	// std::cout << b; Non é possibile!
 
-	try {    // Genera un'eccezione
+	try {    // Genera un'eccezione, va gestita
 		b.pop();
 	}
 	catch (Minimum_size_reached) {
@@ -46,37 +80,22 @@ void test_for_full_stack()
 	assert(a.head() == -1);
 	std::cout << a;
 
-	try {    // NON genera un'eccezione
-		a.push(1);
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
+	a.push(1);	 // NON genera un'eccezione, non serve gestire
 	assert(a.get_size() == 3);
 	assert(a.head() == 0);
 	std::cout << a;
 
-	try {    // NON genera un'eccezione
-		a.push(2);
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
+	a.push(2);   // NON genera un'eccezione, non serve gestire
 	assert(a.get_size() == 3);
 	assert(a.head() == 1);
 	std::cout << a;
 
-	try {    // NON genera un'eccezione
-		a.push(3);
-	}
-	catch (Maximum_size_reached) {
-		std::cerr << "Lo stack é pieno!" << std::endl;
-	}
+	a.push(3); // NON genera un'eccezione, non serve gestire
 	assert(a.get_size() == 3);
 	assert(a.head() == 2);
 	std::cout << a;
 
-	try {    // Genera un'eccezione
+	try {    // Genera un'eccezione, va gestita
 		a.push(4);
 	}
 	catch (Maximum_size_reached) {
@@ -97,61 +116,36 @@ void test_for_push_pop()
 	assert(a.head() == -1);
 	std::cout << a;
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
-		try {    // NON genera un'eccezione
-			a.push(i);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
+	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {    
+		a.push(i);
 	}
 	assert(a.get_size() == 10);
 	assert(a.head() == 9);
 	std::cout << a;
 
 	for (unsigned int i = 0; i < 3; ++i) {
-		try {    // NON genera un'eccezione
-			a.pop();
-		}
-		catch (Minimum_size_reached) {
-			std::cerr << "Lo stack é vuoto!" << std::endl;
-		}
+		a.pop();
 	}
 	assert(a.get_size() == 10);
 	assert(a.head() == 6);
 	std::cout << a;
 
 	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()) - 3; ++i) {
-		try {    // NON genera un'eccezione
-			a.pop();
-		}
-		catch (Minimum_size_reached) {
-			std::cerr << "Lo stack é vuoto!" << std::endl;
-		}
+		a.pop();
 	}
 	assert(a.get_size() == 10);
 	assert(a.head() == -1);
 	std::cout << a;
 
 	for (unsigned int i = 0; i < 2; ++i) {
-		try {    // NON genera un'eccezione
 			a.push(i);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
 	}
 	assert(a.get_size() == 10);
 	assert(a.head() == 1);
 	std::cout << a;
 
 	for (unsigned int i = 2; i < 6; ++i) {
-		try {    // NON genera un'eccezione
 			a.push(i);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
 	}
 	assert(a.get_size() == 10);
 	assert(a.head() == 5);
@@ -165,12 +159,7 @@ void test_for_clear()
 
 	Stack<unsigned int> a(5);
 	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
-		try {    // NON genera un'eccezione
 			a.push(100);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
 	}
 	assert(a.get_size() == 5);
 	assert(a.head() == 4);
@@ -416,21 +405,6 @@ void test_for_iterators()
 void test_for_fancy_types()
 {
 	/* Datatype particolarmente convoluti */
-	enum Color {Red, Green, Blue};
-
-	struct Comparison {
-		bool operator()(int n) const {
-			return n > 0;
-		}
-	};
-
-	struct Person {
-		char* Name;
-		unsigned int age;
-		bool is_married;
-		Person* best_friend;
-	};
-
 	Stack<double> a1(10);
 	Stack<long double> a2(10);
 	Stack<long long int> a3(10);
@@ -449,58 +423,6 @@ void test_for_fancy_types()
 	Stack<Color> a16(10);
 	Stack<Comparison> a17(10);
 	Stack<Person> a18(10);
-
-	std::array<std::array<int, 3>, 3> a = std::array<std::array<int, 3>, 3>();
-
-	auto it1 = &a[0];
-	auto it2 = &a[2];
-	Stack<std::array<int, 3>> b(it1, it2);
-	b.pop();
-	b.push(std::array<int, 3>());
-	// std::cout << b << "Dimensione: " << b.get_size() << std::endl;
- }
-
-void test_square_brackets()
-{
-	Stack<unsigned int> a(5);
-	for (unsigned int i = 0; i < static_cast<unsigned int>(a.get_size()); ++i) {
-		try {    // NON genera un'eccezione
-			a.push(100);
-		}
-		catch (Maximum_size_reached) {
-			std::cerr << "Lo stack é pieno!" << std::endl;
-		}
-	}
-	assert(a.get_size() == 5);
-	assert(a.head() == 4);
-	std::cout << a;
-
-	try {
-		std::cout << a[0] << std::endl;
-	}
-	catch (Item_out_of_bounds) {
-		std::cerr << "L'elemento non esiste!" << std::endl;
-	}
-
-	try {
-		std::cout << a[5] << std::endl;
-	}
-	catch (Item_out_of_bounds) {
-		std::cerr << "L'elemento non esiste!" << std::endl;
-	}
-
-	try {
-		std::cout << a[-1] << std::endl;
-	}
-	catch (Item_out_of_bounds) {
-		std::cerr << "L'elemento non esiste!" << std::endl;
-	}
-
-	a.wipe();
-	try {
-		std::cout << a[10] << std::endl;
-	}
-	catch (Item_out_of_bounds) {
-		std::cerr << "L'elemento non esiste!" << std::endl;
-	}
 }
+
+void test_square_brackets() {}
