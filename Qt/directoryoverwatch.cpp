@@ -14,7 +14,7 @@ DirectoryOverwatch::DirectoryOverwatch(QWidget *parent)
                      this, &DirectoryOverwatch::fileSystemInspection);
     QObject::connect(&(this->trigger), &QTimer::timeout,
                      this, &DirectoryOverwatch::updateTable);
-    // this->trigger.start(3000);
+    this->trigger.start(3000);
     ui->setupUi(this);
 }
 
@@ -33,7 +33,6 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
         this->PendingEvents.clear();
         ui->tabledContent->clearContents();
         ui->tabledContent->setRowCount(0);
-        ui->refresh->setEnabled(true);
 
         this->chosenDirName = d + "/";
 
@@ -57,6 +56,8 @@ void DirectoryOverwatch::on_chooseDirectory_clicked()
         if (QFileInfo(logPath).exists()) {
             loadLogFromFile();
         }
+
+        updateTable();
     }
 }
 
@@ -156,11 +157,6 @@ void DirectoryOverwatch::exportLogToFile()
 
     logFile.close();
 
-}
-
-void DirectoryOverwatch::on_refresh_clicked()
-{
-    updateTable();
 }
 
 void DirectoryOverwatch::updateTable()

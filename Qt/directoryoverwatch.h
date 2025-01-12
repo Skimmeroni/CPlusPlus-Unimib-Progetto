@@ -71,7 +71,6 @@ public:
 
 private slots:
     void on_chooseDirectory_clicked();
-    void on_refresh_clicked();
     void on_quit_clicked();
 
 private:

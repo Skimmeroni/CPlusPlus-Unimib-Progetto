@@ -30,9 +30,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>50</y>
+      <y>20</y>
       <width>761</width>
-      <height>451</height>
+      <height>481</height>
      </rect>
     </property>
     <property name="showGrid">
@@ -106,12 +106,14 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="refresh">
-       <property name="enabled">
-        <bool>false</bool>
+      <widget class="QLabel" name="infoLabel">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
-        <string>Refresh</string>
+        <string>Waiting for a directory to be chosen...</string>
        </property>
       </widget>
      </item>
@@ -152,30 +154,6 @@
       <widget class="QPushButton" name="quit">
        <property name="text">
         <string>🛇  Quit</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>19</x>
-      <y>10</y>
-      <width>761</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="infoLabel">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Waiting for a directory to be chosen...</string>
        </property>
       </widget>
      </item>
