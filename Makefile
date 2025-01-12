@@ -6,17 +6,20 @@ EXTRA_FLAGS = -ggdb -pedantic -std=c++11 -fsanitize=address,leak,undefined -fno-
 CXXFLAGS = $(BASE_CXXFLAGS) $(EXTRA_FLAGS)
 LDFLAGS = $(BASE_LDFLAGS) $(EXTRA_FLAGS)
 
-main.exe: Stack.o
-	$(CXX) $(CXXFLAGS) Stack.o -o main.exe
+main.exe: Main.o Test.o
+	$(CXX) $(CXXFLAGS) Main.o Test.o -o main.exe
 
-Stack.o: Stack.cxx Stack.hpp
-	$(CXX) $(CXXFLAGS) -c Stack.cxx -o Stack.o
+Main.o: Main.cpp Stack.hpp
+	$(CXX) $(CXXFLAGS) -c Main.cpp -o Main.o
+
+Test.o: Test.cpp
+	$(CXX) $(CXXFLAGS) -c Test.cpp -o Test.o
 
 doc:
 	doxygen
 
 clean:
-	rm -f Stack.o main.exe
+	rm -f *.o *.exe
 	rm -rf html
 
 all: main.exe doc
