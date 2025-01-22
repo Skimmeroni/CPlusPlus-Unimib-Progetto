@@ -193,6 +193,10 @@ void DirectoryOverwatch::updateTable()
     int previousLastRow = ui->tabledContent->rowCount();
     ui->tabledContent->setRowCount(previousLastRow + n);
 
+    if (n > 0) {
+        ui->tabledContent->sortItems(3, Qt::AscendingOrder);
+    }
+
     while (start != finish) {
         QTableWidgetItem* flag = new QTableWidgetItem();
         flag->setText("▪");
@@ -216,9 +220,6 @@ void DirectoryOverwatch::updateTable()
     }
 
     this->PendingEvents.clear();
-    if (n > 0) {
-        ui->tabledContent->sortItems(3, Qt::AscendingOrder);
-    }
 }
 
 void DirectoryOverwatch::on_quit_clicked()
