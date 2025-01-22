@@ -1,5 +1,6 @@
 # CPlusPlus-Unimib-Progetto
 Progetto per l'esame _Programmazione C++_ dell'anno accademico 2024/25, _Universitá degli Studi di Milano-Bicocca_.
+Votazione finale: 30/30
 
 I file presenti nella repo sono i seguenti:
 
